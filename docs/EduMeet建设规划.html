@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EduMeet —— 中小学生教育智能体平台 · 建设规划</title>
+<style>
+  :root{
+    --primary:#2563eb; --primary-dark:#1e40af; --accent:#10b981;
+    --bg:#f8fafc; --card:#ffffff; --text:#1e293b; --muted:#64748b;
+    --border:#e2e8f0; --warn:#f59e0b; --danger:#ef4444;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:"PingFang SC","Microsoft YaHei",-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.75;}
+  .container{max-width:1080px;margin:0 auto;padding:0 24px;}
+  /* Header */
+  header{background:linear-gradient(135deg,#1e3a8a 0%,#2563eb 55%,#3b82f6 100%);color:#fff;padding:64px 0 56px;}
+  header h1{font-size:34px;margin-bottom:10px;}
+  header .sub{font-size:16px;opacity:.92;margin-bottom:22px;}
+  header .meta{display:flex;gap:12px;flex-wrap:wrap;}
+  .tag{background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.3);padding:4px 14px;border-radius:999px;font-size:13px;}
+  /* TOC */
+  nav.toc{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px 24px;margin:-30px auto 36px;position:relative;box-shadow:0 8px 24px rgba(30,58,138,.08);}
+  nav.toc h3{font-size:15px;color:var(--muted);margin-bottom:10px;}
+  nav.toc ol{columns:2;column-gap:40px;padding-left:20px;font-size:14px;}
+  nav.toc a{color:var(--primary);text-decoration:none;}
+  nav.toc a:hover{text-decoration:underline;}
+  /* Sections */
+  section{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:32px 36px;margin-bottom:28px;}
+  section h2{font-size:22px;color:var(--primary-dark);padding-bottom:12px;border-bottom:2px solid var(--primary);margin-bottom:20px;display:flex;align-items:center;gap:10px;}
+  section h2 .no{background:var(--primary);color:#fff;border-radius:8px;font-size:14px;padding:2px 10px;}
+  section h3{font-size:17px;margin:22px 0 10px;color:var(--text);}
+  section h4{font-size:15px;margin:16px 0 8px;color:var(--primary-dark);}
+  p{margin-bottom:10px;color:#334155;}
+  ul,ol{padding-left:24px;margin-bottom:12px;}
+  li{margin-bottom:6px;color:#334155;}
+  .muted{color:var(--muted);font-size:13px;}
+  /* Table */
+  table{width:100%;border-collapse:collapse;font-size:14px;margin:14px 0 18px;}
+  th{background:#eff6ff;color:var(--primary-dark);text-align:left;}
+  th,td{border:1px solid var(--border);padding:9px 12px;vertical-align:top;}
+  tr:nth-child(even) td{background:#f8fafc;}
+  /* Callout */
+  .callout{border-left:4px solid var(--primary);background:#eff6ff;border-radius:0 10px 10px 0;padding:14px 18px;margin:14px 0;font-size:14px;}
+  .callout.warn{border-color:var(--warn);background:#fffbeb;}
+  .callout.danger{border-color:var(--danger);background:#fef2f2;}
+  .callout b{color:var(--text);}
+  /* Cards */
+  .grid{display:grid;gap:16px;margin:14px 0;}
+  .grid.g3{grid-template-columns:repeat(3,1fr);}
+  .grid.g2{grid-template-columns:repeat(2,1fr);}
+  .grid.g4{grid-template-columns:repeat(4,1fr);}
+  .card{border:1px solid var(--border);border-radius:12px;padding:16px 18px;background:#fbfdff;}
+  .card .icon{font-size:24px;}
+  .card h4{margin:6px 0 6px;}
+  .card p{font-size:13px;color:var(--muted);margin:0;}
+  /* Architecture diagram */
+  .arch{display:flex;flex-direction:column;gap:10px;margin:16px 0;}
+  .layer{border:2px solid var(--border);border-radius:12px;padding:12px 16px;background:#fbfdff;}
+  .layer .lname{font-weight:700;font-size:14px;color:var(--primary-dark);margin-bottom:8px;display:flex;justify-content:space-between;}
+  .layer .lname small{color:var(--muted);font-weight:400;}
+  .boxes{display:flex;gap:10px;flex-wrap:wrap;}
+  .box{background:#fff;border:1.5px solid var(--primary);color:var(--primary-dark);border-radius:8px;padding:7px 14px;font-size:13px;font-weight:600;}
+  .box.alt{border-color:var(--accent);color:#047857;}
+  .box.gray{border-color:#94a3b8;color:#475569;}
+  .arrow{ text-align:center;color:var(--muted);font-size:18px;line-height:1;}
+  /* ChatGPT-like layout mock */
+  .mock{border:2px solid var(--border);border-radius:12px;overflow:hidden;margin:14px 0;}
+  .mock .bar{background:#f1f5f9;padding:8px 14px;font-size:12px;color:var(--muted);border-bottom:1px solid var(--border);}
+  .mock .cols{display:flex;min-height:260px;}
+  .mock .col{padding:14px;font-size:13px;}
+  .mock .c1{width:220px;background:#0f172a;color:#cbd5e1;flex-shrink:0;}
+  .mock .c1 b{color:#fff;display:block;margin-bottom:8px;font-size:13px;}
+  .mock .c1 div{padding:6px 8px;border-radius:6px;margin-bottom:4px;font-size:12px;}
+  .mock .c1 div.on{background:#1e293b;}
+  .mock .c2{flex:1;background:#fff;}
+  .mock .c2 .msg{max-width:70%;border-radius:12px;padding:8px 12px;margin-bottom:10px;font-size:12.5px;}
+  .mock .c2 .u{background:#eff6ff;margin-left:auto;color:var(--primary-dark);}
+  .mock .c2 .a{background:#f1f5f9;color:#334155;}
+  .mock .c2 .inputbar{border:1.5px solid var(--border);border-radius:999px;padding:8px 14px;color:#94a3b8;font-size:12px;margin-top:14px;display:flex;justify-content:space-between;}
+  .mock .c3{width:230px;background:#f8fafc;border-left:1px solid var(--border);color:#475569;flex-shrink:0;}
+  .mock .c3 b{display:block;font-size:13px;margin-bottom:8px;color:var(--text);}
+  .mock .c3 div{font-size:12px;padding:6px 8px;background:#fff;border:1px solid var(--border);border-radius:8px;margin-bottom:6px;}
+  /* Roadmap */
+  .road{display:flex;gap:0;margin:18px 0;position:relative;}
+  .phase{flex:1;padding:0 8px;position:relative;}
+  .phase .dot{width:16px;height:16px;border-radius:50%;background:var(--primary);margin:0 auto 8px;border:3px solid #dbeafe;}
+  .phase .ph{font-weight:700;font-size:14px;text-align:center;color:var(--primary-dark);}
+  .phase .dur{text-align:center;font-size:12px;color:var(--muted);margin-bottom:8px;}
+  .phase ul{font-size:12.5px;}
+  .road:before{content:"";position:absolute;top:7px;left:8%;right:8%;height:2px;background:#dbeafe;z-index:0;}
+  .phase{z-index:1;}
+  /* flow */
+  .flow{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:12px 0;}
+  .fstep{background:#eff6ff;border:1.5px solid var(--primary);color:var(--primary-dark);border-radius:8px;padding:8px 12px;font-size:13px;font-weight:600;}
+  .fstep.ai{background:#ecfdf5;border-color:var(--accent);color:#047857;}
+  .farr{color:var(--muted);font-weight:700;}
+  footer{text-align:center;color:var(--muted);font-size:13px;padding:30px 0 50px;}
+  code{background:#f1f5f9;border-radius:4px;padding:1px 6px;font-size:13px;color:#0f172a;}
+  pre{background:#0f172a;color:#e2e8f0;border-radius:10px;padding:16px 18px;font-size:12.5px;overflow-x:auto;line-height:1.65;margin:12px 0;}
+  pre .c{color:#94a3b8;}
+  .badge{display:inline-block;border-radius:6px;font-size:11.5px;padding:1px 8px;font-weight:700;margin-right:6px;}
+  .b0{background:#dcfce7;color:#15803d;}.b1{background:#dbeafe;color:#1d4ed8;}.b2{background:#fef3c7;color:#b45309;}
+  @media (max-width:760px){.grid.g3,.grid.g4,.grid.g2{grid-template-columns:1fr;}.road{flex-direction:column;gap:18px;}.road:before{display:none;}nav.toc ol{columns:1;}}
+  @media print{section{page-break-inside:avoid;}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="container">
+    <h1>EduMeet · 中小学生教育智能体平台</h1>
+    <div class="sub">建设规划书 —— 面向家长 / 学生 / 教师的中小学教育信息与经验分享 Agent 平台</div>
+    <div class="meta">
+      <span class="tag">版本 v1.5</span>
+      <span class="tag">2026-09-01</span>
+      <span class="tag">网页版 Web Agent</span>
+      <span class="tag">本期交付：建设规划 + 开发 Spec（不含代码实现）</span>
+    </div>
+  </div>
+</header>
+
+<div class="container">
+
+<nav class="toc">
+  <h3>目录 CONTENTS</h3>
+  <ol>
+    <li><a href="#s1">项目定位与核心诉求</a></li>
+    <li><a href="#s2">目标用户与角色设计</a></li>
+    <li><a href="#s3">产品功能蓝图</a></li>
+    <li><a href="#s4">整体技术架构</a></li>
+    <li><a href="#s5">前端架构设计（对标 ChatGPT 网页版）</a></li>
+    <li><a href="#s6">核心功能建设思路</a></li>
+    <li><a href="#s7">技术选型清单与模型推荐</a></li>
+    <li><a href="#s8">非功能性需求与合规</a></li>
+    <li><a href="#s9">建设路线图（五期迭代）</a></li>
+    <li><a href="#s10">Spec 文档体系与拆分说明</a></li>
+    <li><a href="#s11">会员体系与积分计费（沙箱控制）</a></li>
+    <li><a href="#s12">桌面版 SDK 建设规划（终期）</a></li>
+    <li><a href="#s13">平台运营、合规与体验支撑体系</a></li>
+    <li><a href="#s14">风险与应对</a></li>
+  </ol>
+</nav>
+
+<!-- 1 -->
+<section id="s1">
+  <h2><span class="no">01</span>项目定位与核心诉求</h2>
+  <p><b>EduMeet</b> 是一个面向全国中小学生教育场景的网页版 AI 智能体平台，围绕「<b>入学政策 / 学习资料 / 家庭教育思路 / 学生学习经验 / 教师教育经验</b>」五大主题，为家长、学生、教师提供<b>信息聚合 + AI 生成 + 经验分享</b>的一站式服务。</p>
+
+  <h3>1.1 核心诉求</h3>
+  <div class="grid g3">
+    <div class="card"><div class="icon">🎯</div><h4>消除信息偏差</h4><p>家长面对各地入学政策、升学路径、教育资讯存在严重的信息不对称，Agent 聚合开源权威内容并支持语义检索，帮助家长快速获得准确、可比对的信息。</p></div>
+    <div class="card"><div class="icon">🤝</div><h4>经验分享平台</h4><p>沉淀家长、学生、教师三方的一手经验：AI 辅助生成结构化文章，图文并茂发布，形成可检索、可查阅的教育经验内容库。</p></div>
+    <div class="card"><div class="icon">🧠</div><h4>AI 多智能体协作</h4><p>基于 LangGraph 编排的写作 / 审核 / 配图 / 政策核查等多智能体流水线，自动生成图文文章并与账号自动绑定归属。</p></div>
+  </div>
+
+  <h3>1.2 平台内容来源（双轨制）</h3>
+  <table>
+    <tr><th>内容来源</th><th>说明</th><th>使用方式</th></tr>
+    <tr><td><b>开源网络文章</b></td><td>教育部及各地教育局官网、权威教育媒体、公开教育社区的开源内容</td><td>采集/导入 → 治理脱敏 → 建立公开内容库，供检索查阅与 RAG 引用；标注来源与版权属性</td></tr>
+    <tr><td><b>平台私有文章</b></td><td>用户（家长/学生/教师）创作、AI 辅助生成、自定义导入的素材文章</td><td>与账号绑定归属，按权限（私有/可见/公开）管理，支持图文、嵌入素材</td></tr>
+  </table>
+
+  <div class="callout warn"><b>合规前置声明：</b>平台内容涉及未成年人教育与政策信息，建设全程需遵守内容安全审核、个人信息保护（不上传未成年人身份信息）、开源内容版权标注三项红线，详见 <a href="#s8">第 8 章</a>。</div>
+</section>
+
+<!-- 2 -->
+<section id="s2">
+  <h2><span class="no">02</span>目标用户与角色设计</h2>
+  <table>
+    <tr><th>角色</th><th>核心场景</th><th>平台能力侧重</th></tr>
+    <tr><td><b>家长</b>（主要用户）</td><td>查询入学政策、对比升学路径、获取家庭教育方法、学习他人经验</td><td>政策检索问答、AI 生成个性化教育文章、浏览经验库、发布分享</td></tr>
+    <tr><td><b>学生</b></td><td>查找学习资料、借鉴同龄人学习经验</td><td>学习资料检索、经验文章阅读、AI 辅助整理学习笔记</td></tr>
+    <tr><td><b>教师</b></td><td>分享教学经验、获取素材、积累个人内容专栏</td><td>素材库批量导入、AI 辅助写作、个人专栏管理</td></tr>
+    <tr><td><b>内容运营 / 管理员</b></td><td>内容审核、来源管理、模型配置、社区治理</td><td>管理后台：审核工作台、内容源管理、模型路由配置、举报处理</td></tr>
+  </table>
+  <p class="muted">账号体系采用统一注册 + 角色标签（家长/学生/教师），角色影响推荐权重与生成模板选择，不做硬性隔离。</p>
+</section>
+
+<!-- 3 -->
+<section id="s3">
+  <h2><span class="no">03</span>产品功能蓝图</h2>
+  <div class="grid g4">
+    <div class="card"><div class="icon">💬</div><h4>F1 对话式问答</h4><p>对标 ChatGPT 的对话主界面；基于 RAG 检索政策与经验库回答教育问题，支持多轮会话、会话历史管理。</p></div>
+    <div class="card"><div class="icon">📝</div><h4>F2 文章自动生成</h4><p>多智能体流水线生成图文文章（标题/大纲/正文/配图），生成结果自动绑定当前账号，可编辑后发布。</p></div>
+    <div class="card"><div class="icon">🔍</div><h4>F3 文章检索与图文阅读</h4><p>全文 + 语义混合检索；图文界面化阅读器（目录、图片灯箱、视频播放），支持分类/标签/专题浏览。</p></div>
+    <div class="card"><div class="icon">🗂️</div><h4>F4 素材中心</h4><p>自定义导入文章素材、图片、视频；素材自动解析、打标，可一键插入文档/文章生成流程。</p></div>
+    <div class="card"><div class="icon">🤖</div><h4>F5 自定义大模型</h4><p>用户在设置中自选大模型（官方预置 + 自定义 API Key 接入），生成/对话按所选模型路由。</p></div>
+    <div class="card"><div class="icon">👤</div><h4>F6 个人中心</h4><p>我的文章、我的素材、我的会话、账号角色与隐私设置、会员与积分（见第 11 章）。</p></div>
+    <div class="card"><div class="icon">📚</div><h4>F7 公共内容库</h4><p>开源网络文章的聚合治理库：政策库（按省市分级）、学习资料库、经验精选，全部可检索可溯源。</p></div>
+    <div class="card"><div class="icon">🛡️</div><h4>F8 管理后台</h4><p>内容审核工作台、举报处理、内容源配置、模型与配额管理、数据看板。</p></div>
+    <div class="card"><div class="icon">🔔</div><h4>F9 消息通知中心</h4><p>站内信统一收口：生成完成、审核结果、互动通知、系统公告；支持邮件/短信渠道分发（见 13.2）。</p></div>
+    <div class="card"><div class="icon">🧭</div><h4>F10 引导与帮助</h4><p>新手三步引导、场景化模板入口、帮助中心与反馈工单，降低家长用户上手门槛（见 13.6）。</p></div>
+  </div>
+  <h3>3.1 功能与需求映射</h3>
+  <table>
+    <tr><th>原始需求</th><th>对应功能</th><th>本期范围</th></tr>
+    <tr><td>① 网页版，布局参考 ChatGPT</td><td>F1 对话问答 + 前端三栏架构</td><td>✅ 一期</td></tr>
+    <tr><td>② 文章自动生成 + 账号自动绑定 + 图文</td><td>F2 生成流水线</td><td>✅ 一期</td></tr>
+    <tr><td>③ 文章检索查阅 + 图文界面化展示</td><td>F3 检索与阅读器</td><td>✅ 二期</td></tr>
+    <tr><td>④ 自定义导入素材（文章/图片/视频）并集成到文档</td><td>F4 素材中心</td><td>✅ 二期</td></tr>
+    <tr><td>⑤ 自定义选择大模型</td><td>F5 模型路由</td><td>✅ 一期（预置）/ 二期（自定义 Key）</td></tr>
+    <tr><td>⑥ 内容来源：开源文章 + 私有文章</td><td>F7 公共内容库 + 账号内容体系</td><td>✅ 一/二期</td></tr>
+    <tr><td>⑦ 解决信息偏差 + 经验分享平台</td><td>F1+F2+F3+F7 组合达成</td><td>✅ 全程</td></tr>
+  </table>
+</section>
+
+<!-- 4 -->
+<section id="s4">
+  <h2><span class="no">04</span>整体技术架构</h2>
+  <p>采用<b>前后端分离 + 微服务化分层</b>架构，AI 能力独立为智能体编排层，通过 LiteLLM 统一接入多家大模型，保证「自定义模型」能力的可扩展性。</p>
+
+  <div class="arch">
+    <div class="layer">
+      <div class="lname">L1 接入层 <small>用户入口</small></div>
+      <div class="boxes">
+        <div class="box">Web 前端（Vue3 + Element Plus + Pinia）</div>
+        <div class="box">桌面客户端 SDK（终期建设，见第 12 章）</div>
+        <div class="box gray">Nginx / CDN</div>
+        <div class="box gray">HTTPS + SSE 流式</div>
+      </div>
+    </div>
+    <div class="arrow">▼</div>
+    <div class="layer">
+      <div class="lname">L2 网关与应用服务层 <small>FastAPI</small></div>
+      <div class="boxes">
+        <div class="box">用户与账号服务</div>
+        <div class="box">对话会话服务</div>
+        <div class="box">文章服务（生成/发布）</div>
+        <div class="box">素材服务</div>
+        <div class="box">检索服务</div>
+        <div class="box">内容库/采集服务</div>
+        <div class="box">通知/消息服务</div>
+        <div class="box">管理后台服务</div>
+      </div>
+    </div>
+    <div class="arrow">▼</div>
+    <div class="layer" style="border-color:#10b981;">
+      <div class="lname" style="color:#047857;">L3 智能体编排层 <small>LangGraph Supervisor 多智能体</small></div>
+      <div class="boxes">
+        <div class="box alt">规划 Agent（大纲）</div>
+        <div class="box alt">写作 Agent</div>
+        <div class="box alt">配图 Agent</div>
+        <div class="box alt">核查 Agent（政策事实/内容安全）</div>
+        <div class="box alt">审核 Agent</div>
+        <div class="box alt">RAG 问答 Agent</div>
+        <div class="box alt">素材理解 Agent（图片/视频打标）</div>
+        <div class="box gray">LiteLLM 模型网关（多模型路由）</div>
+      </div>
+    </div>
+    <div class="arrow">▼</div>
+    <div class="layer">
+      <div class="lname">L4 数据与存储层</div>
+      <div class="boxes">
+        <div class="box">PostgreSQL（业务主库）</div>
+        <div class="box">Redis（缓存/队列/会话）</div>
+        <div class="box">向量库 pgvector / Milvus（RAG）</div>
+        <div class="box">Elasticsearch（全文检索）</div>
+        <div class="box">对象存储 OSS（图片/视频/文档）</div>
+      </div>
+    </div>
+    <div class="arrow">▼</div>
+    <div class="layer">
+      <div class="lname">L5 基础设施层</div>
+      <div class="boxes">
+        <div class="box gray">Celery 异步任务（生成流水线/采集/转码）</div>
+        <div class="box gray">Docker 容器化部署</div>
+        <div class="box gray">日志/监控/可观测（Langfuse）</div>
+      </div>
+    </div>
+  </div>
+
+  <h3>4.1 关键架构决策</h3>
+  <table>
+    <tr><th>决策点</th><th>选型</th><th>理由</th></tr>
+    <tr><td>多模型接入</td><td>LiteLLM 统一网关</td><td>OpenAI 兼容协议屏蔽各厂商差异；支持用户自带 API Key、按模型计费统计与配额控制，天然满足「自定义选择大模型」需求</td></tr>
+    <tr><td>AI 编排</td><td>LangGraph（Supervisor 模式）</td><td>文章生成是多步有状态流水线（规划→写作→配图→核查），图结构编排支持断点重试与人工介入审核</td></tr>
+    <tr><td>检索</td><td>ES 全文 + 向量语义混合检索（RRF 融合）</td><td>政策类查询需关键词精确匹配（如「2026 北京幼升小」），经验类查询需语义泛化，二者融合效果最佳</td></tr>
+    <tr><td>生成任务异步化</td><td>Celery + Redis</td><td>图文文章生成耗时长（30s~3min），必须异步 + 进度推送（SSE），避免阻塞请求</td></tr>
+    <tr><td>文件存储</td><td>对象存储 + 预签名直传</td><td>图片/视频大文件不走应用服务器，前端直传 OSS 提升上传体验</td></tr>
+  </table>
+</section>
+
+<!-- 5 -->
+<section id="s5">
+  <h2><span class="no">05</span>前端架构设计（对标 ChatGPT 网页版）</h2>
+  <h3>5.1 页面布局：三栏可折叠结构</h3>
+  <div class="mock">
+    <div class="bar">EduMeet Web · 主工作台（参考 chatgpt.com 布局）</div>
+    <div class="cols">
+      <div class="col c1">
+        <b>＋ 新对话 / 新文章</b>
+        <div class="on">🔍 政策问答</div>
+        <div>📝 生成《幼升小准备指南》</div>
+        <div>💬 学区选择咨询会话</div>
+        <div>─── 历史会话（按日期分组）───</div>
+        <div>昨天 · 3 条</div>
+        <div>本周 · 12 条</div>
+        <div>⚙️ 设置 / 模型选择</div>
+        <div>👤 个人中心</div>
+      </div>
+      <div class="col c2">
+        <div class="msg u">孩子明年幼升小，北京海淀需要准备什么？</div>
+        <div class="msg a">根据海淀区 2025 年入学政策（来源标注）…… [引用卡片] 附：2026 时间轴图</div>
+        <div class="msg a">📎 已为你生成图文文章草稿《海淀幼升小全攻略》→ 查看 / 发布</div>
+        <div class="inputbar"><span>输入问题，或让 AI 帮你写一篇文章…</span><span>📎 素材 | 🧩 模型 | ➤</span></div>
+      </div>
+      <div class="col c3">
+        <b>侧栏面板（可切换）</b>
+        <div>📑 文章大纲 / 目录导航</div>
+        <div>🖼️ 素材选择器（插入图片/视频）</div>
+        <div>🤖 当前模型：GPT-4o ▾</div>
+        <div>📎 引用来源列表</div>
+      </div>
+    </div>
+  </div>
+
+  <h3>5.2 前端工程架构</h3>
+  <table>
+    <tr><th>维度</th><th>设计</th></tr>
+    <tr><td>技术栈</td><td>Vue3（Composition API）+ TypeScript + Vite + Element Plus + Pinia + Vue Router</td></tr>
+    <tr><td>布局系统</td><td>左侧会话导航栏（可折叠，移动端抽屉化）｜中央内容区（对话流 / 编辑器 / 阅读器三种模式复用）｜右侧上下文面板（大纲、素材选择器、模型选择、引用来源，按场景切换）</td></tr>
+    <tr><td>状态管理（Pinia）</td><td>userStore（账号/角色/权限）、sessionStore（会话列表/消息流）、articleStore（草稿/生成任务状态）、materialStore（素材库）、modelStore（模型列表/当前模型）</td></tr>
+    <tr><td>流式通信</td><td>SSE 接收对话与生成进度流；文章生成用任务轮询 + SSE 双通道展示流水线阶段</td></tr>
+    <tr><td>富文本编辑器</td><td>TipTap（基于 ProseMirror）：图文混排、素材插入、AI 续写/改写浮动菜单、@ 引用素材</td></tr>
+    <tr><td>阅读器</td><td>图文界面化展示：自动目录、图片灯箱预览、视频内嵌播放、来源引用锚点、阅读进度</td></tr>
+    <tr><td>路由规划</td><td>/chat（对话）/editor（编辑器）/library（检索阅读）/materials（素材中心）/profile（个人中心）/admin（后台）</td></tr>
+  </table>
+</section>
+
+<!-- 6 -->
+<section id="s6">
+  <h2><span class="no">06</span>核心功能建设思路</h2>
+
+  <h3>6.1 文章自动生成流水线（多智能体）</h3>
+  <div class="flow">
+    <div class="fstep">用户输入主题<br><span class="muted">+ 可选素材/参考文章</span></div><span class="farr">→</span>
+    <div class="fstep ai">规划 Agent<br>大纲 + 资料检索</div><span class="farr">→</span>
+    <div class="fstep ai">写作 Agent<br>分节生成正文</div><span class="farr">→</span>
+    <div class="fstep ai">配图 Agent<br>配图生成/素材图选取</div><span class="farr">→</span>
+    <div class="fstep ai">核查 Agent<br>政策事实核验 + 内容安全</div><span class="farr">→</span>
+    <div class="fstep">草稿落库<br><b>自动绑定当前账号</b></div><span class="farr">→</span>
+    <div class="fstep">用户编辑 → 发布</div>
+  </div>
+  <ul>
+    <li><b>账号自动绑定：</b>生成任务创建时即写入 <code>author_id = 当前登录账号</code>，草稿与成品全生命周期归属该账号，预留多人协作扩展字段。</li>
+    <li><b>图文模式：</b>写作 Agent 按节输出「文本 + 配图指令」，配图 Agent 两条路：① 从用户素材库/公共图库选图（优先，版权安全）；② 调用文生图模型生成插画。图文以结构化 JSON（块级文档模型）存储，编辑器与阅读器共用。</li>
+    <li><b>素材融入：</b>生成前用户可勾选素材，Agent 通过工具调用读取素材内容/图片元信息并自然融入正文相应章节。</li>
+    <li><b>进度可视化：</b>前端实时展示当前 Agent 阶段（大纲→写作→配图→核查），支持中途取消与重新生成单节。</li>
+  </ul>
+
+  <h3>6.2 检索与图文查阅</h3>
+  <div class="flow">
+    <div class="fstep">用户查询</div><span class="farr">→</span>
+    <div class="fstep">查询理解改写</div><span class="farr">→</span>
+    <div class="fstep">ES 全文检索</div><span class="farr">＋</span>
+    <div class="fstep">向量语义检索</div><span class="farr">→</span>
+    <div class="fstep">RRF 融合排序<br><span class="muted">+ 权限过滤</span></div><span class="farr">→</span>
+    <div class="fstep">结果页 / 图文阅读器</div>
+  </div>
+  <ul>
+    <li>检索范围：公共内容库（开源文章）+ 平台公开分享的私有文章，按用户权限动态过滤。</li>
+    <li>结果展示：卡片式列表（标题、摘要、封面图、来源标签「官方政策/社区经验/私有文章」、更新时间）；支持省市/学段/主题/角色多维筛选。</li>
+    <li>阅读器：块级文档渲染，支持目录导航、图片缩放、视频播放、AI 摘要、相关文章推荐。</li>
+  </ul>
+
+  <h3>6.3 素材中心与文档集成</h3>
+  <ul>
+    <li><b>导入通道：</b>拖拽上传（图片/视频/Word/PDF/TXT/Markdown/URL 链接）、剪贴板粘贴、URL 抓取解析。</li>
+    <li><b>自动加工：</b>文档抽取正文 → 图片/视频生成元信息 → 素材理解 Agent 自动打标（主题/学段/摘要）→ 入素材库。</li>
+    <li><b>集成方式：</b>① 编辑器内素材侧栏拖拽插入；② @ 唤起素材选择器；③ 生成文章时勾选素材作为上下文；④ URL 素材自动生成引用卡片。</li>
+    <li><b>视频处理：</b>上传后异步转码、截取封面帧，文章中以内嵌播放器展示。</li>
+  </ul>
+
+  <h3>6.4 自定义大模型</h3>
+  <ul>
+    <li><b>官方预置模型：</b>平台统一配置若干主流模型（不锁定单一厂商，选型推荐与分批接入计划见 <a href="#s7">7.2 模型推荐矩阵</a>），用户下拉选择。</li>
+    <li><b>自定义接入：</b>用户可填写 OpenAI 兼容 API（Base URL + Key + 模型名），密钥加密存储，仅本人会话/生成生效。</li>
+    <li><b>路由实现：</b>LiteLLM 按请求携带的模型标识路由，统一处理超时、重试、降级、用量统计与配额。</li>
+    <li><b>沙箱控制与计费：</b>登录账号分级沙箱——免费用户仅可用免费模型与每日额度，付费会员按等级开放不同模型；消耗按积分扣款，积分与百万 token 定价等比兑换并预留 5% 利润空间，详见 <a href="#s11">第 11 章</a>。</li>
+  </ul>
+
+  <h3>6.5 公共内容库治理（开源文章来源）</h3>
+  <ul>
+    <li>采集范围白名单：教育部/各地教育局官网、权威教育媒体 RSS、开源教育内容站。</li>
+    <li>入库流程：抓取 → 正文抽取 → 去重 → 来源与版权标注 → 政策条目结构化（省市/学段/年份）→ 审核 → 建索引。</li>
+    <li>政策时效管理：按年度/地区维护版本，过期政策降权并标注「历史版本」。</li>
+  </ul>
+</section>
+
+<!-- 7 -->
+<section id="s7">
+  <h2><span class="no">07</span>技术选型清单</h2>
+
+  <h3>7.1 基础技术栈</h3>
+  <table>
+    <tr><th>层</th><th>组件</th><th>选型</th><th>说明</th></tr>
+    <tr><td rowspan="3">前端</td><td>框架</td><td>Vue3 + TypeScript + Vite</td><td>组合式 API，构建快</td></tr>
+    <tr><td>UI / 状态</td><td>Element Plus + Pinia + Vue Router</td><td>成熟组件库与状态管理</td></tr>
+    <tr><td>编辑器 / 渲染</td><td>TipTap + ProseMirror</td><td>图文混排与块级文档模型</td></tr>
+    <tr><td rowspan="3">后端</td><td>框架</td><td>Python3 + FastAPI</td><td>异步高性能，原生 SSE 支持</td></tr>
+    <tr><td>AI 编排</td><td>LangGraph（Supervisor）</td><td>多智能体流水线编排</td></tr>
+    <tr><td>模型网关</td><td>LiteLLM</td><td>多模型统一接入与路由</td></tr>
+    <tr><td rowspan="4">数据</td><td>主库 / 向量</td><td>PostgreSQL + pgvector</td><td>业务与向量一体化，后期可平滑迁 Milvus</td></tr>
+    <tr><td>缓存 / 队列</td><td>Redis</td><td>会话缓存 + Celery Broker</td></tr>
+    <tr><td>全文检索</td><td>Elasticsearch</td><td>中文分词（IK）全文检索</td></tr>
+    <tr><td>对象存储</td><td>S3 兼容 OSS</td><td>图片/视频/文档，预签名直传</td></tr>
+    <tr><td rowspan="2">任务</td><td>异步任务</td><td>Celery + Redis</td><td>生成流水线、采集、转码</td></tr>
+    <tr><td>定时任务</td><td>Celery Beat</td><td>内容源定时抓取</td></tr>
+    <tr><td rowspan="2">运维</td><td>部署</td><td>Docker Compose → K8s</td><td>一期容器化，规模后上 K8s</td></tr>
+    <tr><td>可观测</td><td>Langfuse + 日志/监控</td><td>LLM 调用追踪、成本与质量分析</td></tr>
+  </table>
+
+  <h3>7.2 图文友好 · 高性价比模型推荐（分批接入）</h3>
+  <p class="muted">行情调研时间：2026-09；价格为公开 API 定价参考（元/百万 Token，实际以厂商官网为准）。平台不锁定单一厂商，全部经 LiteLLM 网关统一接入，后端可随行情热切换。接入代码 Demo 详见 Spec <code>07-大模型接入与路由</code> 第 7 节。</p>
+
+  <h4>① 文本对话 / 文章生成主链路</h4>
+  <table>
+    <tr><th>批次</th><th>模型</th><th>厂商</th><th>优势</th><th>不足</th><th>参考价格</th><th>建议用途</th></tr>
+    <tr><td><span class="badge b0">P0</span>首批</td><td>豆包 Pro（Seed 系）</td><td>字节 · 火山方舟</td><td>价格极低、中文语义第一梯队、响应快、免费额度大、国内原生直连</td><td>幻觉率偏高（须配合核查 Agent）、深度推理弱于旗舰</td><td>约 0.8 / 2</td><td>高频对话问答、文章初稿</td></tr>
+    <tr><td><span class="badge b0">P0</span>首批</td><td>DeepSeek V3.x</td><td>深度求索</td><td>地板价、综合性价比最高、工具调用稳定、开源可私有化</td><td>原生多模态偏弱（纯文本为主）、高峰期限流</td><td>约 2 / 8</td><td>文章正文生成、政策要点结构化抽取</td></tr>
+    <tr><td><span class="badge b0">P0</span>首批</td><td>通义千问 Qwen3-Plus</td><td>阿里云</td><td>中文/政策语料适配好、DashScope OpenAI 兼容接入、开源全尺寸可私有化、免费额度充足</td><td>旗舰 Max 档价格偏高</td><td>约 2 / 4</td><td>政策理解、检索查询改写</td></tr>
+    <tr><td><span class="badge b1">P1</span>二批</td><td>智谱 GLM-4.x / GLM-5</td><td>智谱 AI</td><td>Agent 工具调用稳定、Plus 档 1M 上下文、价格友好</td><td>生态与社区规模稍小</td><td>约 2 / 5（标准档）</td><td>多智能体工具调用节点、长文处理</td></tr>
+    <tr><td><span class="badge b1">P1</span>二批</td><td>Kimi K2（Moonshot）</td><td>月之暗面</td><td>长上下文能力强，适合长文档素材总结与长文写作</td><td>幻觉控制一般、价格高于豆包档</td><td>约 4 / 16 档</td><td>长素材提炼、长文续写</td></tr>
+    <tr><td><span class="badge b2">P2</span>可选</td><td>GPT-4o-mini / Gemini Flash</td><td>OpenAI / Google</td><td>多模态与多语言能力强、生态成熟</td><td>需海外网络与合规评估、美元计价成本高</td><td>约 $0.15/$0.6 档</td><td>高级用户可选模型、多语料场景</td></tr>
+  </table>
+
+  <h4>② 图像理解（素材识图打标 / 配图选图）</h4>
+  <table>
+    <tr><th>批次</th><th>模型</th><th>优势</th><th>不足</th></tr>
+    <tr><td><span class="badge b0">P0</span></td><td>Qwen-VL-Plus（阿里）</td><td>中文图文理解好、价格低、与 Qwen3 生态同栈</td><td>复杂图表推理弱于旗舰</td></tr>
+    <tr><td><span class="badge b1">P1</span></td><td>GLM-4V（智谱）</td><td>识图+文字提取稳定、API 友好</td><td>极限场景准确率一般</td></tr>
+    <tr><td><span class="badge b2">P2</span></td><td>GPT-4o-mini / Gemini Flash（多模态）</td><td>综合识图能力最强档</td><td>网络与合规成本</td></tr>
+  </table>
+
+  <h4>③ 文生图（文章配图 / 封面生成）</h4>
+  <table>
+    <tr><th>批次</th><th>模型</th><th>厂商</th><th>优势</th><th>不足</th><th>接入方式</th></tr>
+    <tr><td><span class="badge b0">P0</span></td><td>通义万相 wanx2.x</td><td>阿里</td><td>中文理解稳、海报/封面/教育插画顺手、价格低、商用条款清晰</td><td>纯艺术上限略逊海外顶级</td><td>DashScope 异步 API</td></tr>
+    <tr><td><span class="badge b0">P0</span></td><td>Seedream（即梦系）</td><td>字节</td><td>中文语义强、出图快、社媒封面/信息图风格突出</td><td>商用授权条款需逐版确认</td><td>火山方舟 Images API</td></tr>
+    <tr><td><span class="badge b1">P1</span></td><td>Qwen-Image</td><td>阿里</td><td>中文文字渲染强（带字封面/信息图不乱码）、开源可自部署</td><td>复杂构图一般</td><td>DashScope / 开源自部署</td></tr>
+    <tr><td><span class="badge b1">P1</span></td><td>FLUX.2</td><td>Black Forest Labs</td><td>开源可控、细节与人物一致性强、可教育风格垂直微调</td><td>需自建 GPU 推理或三方托管</td><td>BFL / fal / Replicate API</td></tr>
+    <tr><td><span class="badge b2">P2</span></td><td>GPT Image 2 / HunyuanImage 3.0</td><td>OpenAI / 腾讯</td><td>GPT Image 质量顶级；腾讯开放权重</td><td>前者成本与合规高；后者部署门槛</td><td>各官方 API / 开源权重</td></tr>
+  </table>
+
+  <h4>④ 分批接入节奏与 Demo</h4>
+  <p><b>P0 首批（一期上线即用）</b>：豆包 Pro + DeepSeek（文本/生成）、Qwen-VL（识图打标）、通义万相（生图），覆盖全部核心场景且成本最低；<b>P1 二批（二期）</b>：GLM、Kimi、Qwen-Image、FLUX 补充长文与生图能力；<b>P2 可选（三期+）</b>：面向高级用户开放海外模型。以下为 LiteLLM 统一接入示意：</p>
+  <pre><span class="c"># litellm config.yaml —— 新增模型只需加一段配置，业务代码零改动</span>
+model_list:
+  - model_name: doubao-pro            <span class="c"># P0 文本：字节火山方舟</span>
+    litellm_params:
+      model: openai/doubao-seed-1.6
+      api_base: https://ark.cn-beijing.volces.com/api/v3
+      api_key: os.environ/ARK_API_KEY
+  - model_name: deepseek-chat         <span class="c"># P0 文本：DeepSeek 官方协议</span>
+    litellm_params:
+      model: deepseek/deepseek-chat
+      api_key: os.environ/DEEPSEEK_API_KEY
+  - model_name: qwen-plus             <span class="c"># P0 文本：通义 DashScope 兼容模式</span>
+    litellm_params:
+      model: openai/qwen-plus
+      api_base: https://dashscope.aliyuncs.com/compatible-mode/v1
+      api_key: os.environ/DASHSCOPE_API_KEY
+  - model_name: qwen-vl-plus          <span class="c"># P0 图像理解</span>
+    litellm_params:
+      model: openai/qwen-vl-plus
+      api_base: https://dashscope.aliyuncs.com/compatible-mode/v1
+      api_key: os.environ/DASHSCOPE_API_KEY</pre>
+  <p class="muted">生图模型（通义万相/Seedream）为异步任务型 API，由平台 image-service 封装为统一 <code>generate_image(prompt, style)</code> 工具供配图 Agent 调用；完整多厂商接入代码 Demo 见 Spec 07 第 7 节。</p>
+</section>
+
+<!-- 8 -->
+<section id="s8">
+  <h2><span class="no">08</span>非功能性需求与合规</h2>
+  <table>
+    <tr><th>类别</th><th>要求</th></tr>
+    <tr><td>内容安全</td><td>AI 生成内容双重审核（核查 Agent + 规则/模型内容安全接口）；不生成涉及未成年人隐私、应试歧视、伪科学教育建议的内容；UGC 发布前机审 + 敏感场景人审</td></tr>
+    <tr><td>未成年人保护</td><td>不采集未成年人身份信息；学生角色的内容浏览默认安全模式；无社交私聊功能</td></tr>
+    <tr><td>政策信息准确性</td><td>政策类回答必须引用来源并附「以官方最新发布为准」提示；核查 Agent 对政策数字/时间做事实核验；政策库按地区年度版本化</td></tr>
+    <tr><td>版权合规</td><td>开源文章入库记录来源 URL 与许可协议；用户导入素材声明所有权；AI 生成配图选用可商用图源或自研生成</td></tr>
+    <tr><td>安全与隐私</td><td>JWT 鉴权 + RBAC；API Key/密钥加密存储（AES + KMS）；上传文件类型/大小校验与病毒扫描；操作审计日志</td></tr>
+    <tr><td>性能</td><td>对话首 Token &lt; 2s；检索 P95 &lt; 500ms；文章生成支持并发排队；静态资源 CDN</td></tr>
+    <tr><td>可用性</td><td>核心服务无单点；LLM 调用失败自动降级重试/切换模型；生成任务断点恢复</td></tr>
+    <tr><td>容灾与发布</td><td>备份 RPO ≤ 1h / RTO ≤ 4h、季度恢复演练、灰度发布与 AB 对照（细则见 <a href="#s13">13.5</a>）</td></tr>
+    <tr><td>资质与备案</td><td>ICP 备案、深度合成算法备案、生成式 AI 服务备案为上线前置项（见 <a href="#s13">13.3</a>）</td></tr>
+  </table>
+</section>
+
+<!-- 9 -->
+<section id="s9">
+  <h2><span class="no">09</span>建设路线图（五期迭代）</h2>
+  <div class="road">
+    <div class="phase"><div class="dot"></div><div class="ph">一期 · 基础框架</div><div class="dur">约 4 周</div>
+      <ul><li>账号与登录、角色体系</li><li>ChatGPT 式三栏前端骨架</li><li>对话问答（含基础 RAG）</li><li>LiteLLM 模型接入 + 模型选择</li><li>文章生成流水线 MVP + 账号绑定</li></ul></div>
+    <div class="phase"><div class="dot"></div><div class="ph">二期 · 内容能力</div><div class="dur">约 4 周</div>
+      <ul><li>混合检索与图文阅读器</li><li>素材中心（导入/打标/插入）</li><li>TipTap 编辑器 + 图文发布</li><li>公共内容库采集与治理</li><li>自定义 API Key 接入模型</li></ul></div>
+    <div class="phase"><div class="dot"></div><div class="ph">三期 · 平台化</div><div class="dur">约 4 周</div>
+      <ul><li>管理后台（审核/举报/看板）</li><li>政策库结构化与版本管理</li><li>个人专栏 / 关注 / 互动</li><li>视频素材完整链路</li><li>会员积分计费体系（沙箱控制，见第 11 章）</li><li>消息通知中心与埋点运营看板（见第 13 章）</li></ul></div>
+    <div class="phase"><div class="dot"></div><div class="ph">四期 · 智能增强</div><div class="dur">持续</div>
+      <ul><li>个性化推荐与订阅</li><li>入学政策智能问答（地区时间轴）</li><li>多智能体协作扩展（规划辅导等）</li><li>移动端适配 / 小程序评估</li></ul></div>
+    <div class="phase"><div class="dot"></div><div class="ph">终期 · 桌面版 SDK</div><div class="dur">最后实现</div>
+      <ul><li>桌面客户端（Tauri，复用 Web 端）</li><li>本地素材/文件深度集成</li><li>离线缓存与系统通知</li><li>开放 SDK（JS/Python）供第三方集成</li></ul></div>
+  </div>
+</section>
+
+<!-- 10 -->
+<section id="s10">
+  <h2><span class="no">10</span>Spec 文档体系与拆分说明</h2>
+  <p>详细建设 Spec 以 Markdown 文档体系输出至 <code>docs/spec/</code> 目录，按「可独立开发、可并行分工」原则拆分模块文档（00~12 号主文档 + 评测/ 目录 E0~E5 评测体系），每篇均包含：目标与范围、功能需求、数据/接口设计、验收标准，可直接派发开发。</p>
+  <table>
+    <tr><th>文档</th><th>内容</th><th>对应开发工作</th></tr>
+    <tr><td>00-总览与开发约定</td><td>项目背景、术语、工程规范、联调约定</td><td>全员必读</td></tr>
+    <tr><td>01-系统架构与模块划分</td><td>分层架构、服务边界、模块依赖</td><td>架构师 / 全体</td></tr>
+    <tr><td>02-数据模型设计</td><td>全部表结构、索引、ER 关系</td><td>后端</td></tr>
+    <tr><td>03-API 接口设计</td><td>REST + SSE 接口契约</td><td>前后端联调依据</td></tr>
+    <tr><td>04-文章生成与智能体编排</td><td>LangGraph 流水线、Prompt 设计、绑定机制</td><td>AI 后端</td></tr>
+    <tr><td>05-素材中心与文档集成</td><td>导入、解析、打标、插入文档链路</td><td>后端 + 前端</td></tr>
+    <tr><td>06-检索与图文展示</td><td>混合检索、索引设计、阅读器</td><td>后端 + 前端</td></tr>
+    <tr><td>07-大模型接入与路由</td><td>LiteLLM 配置、自定义 Key、配额</td><td>AI 后端</td></tr>
+    <tr><td>08-前端页面与交互设计</td><td>页面清单、路由、组件、交互规格</td><td>前端</td></tr>
+    <tr><td>09-里程碑与开发任务拆分</td><td>任务 WBS、依赖关系、验收标准</td><td>项目管理</td></tr>
+    <tr><td>10-桌面版SDK建设</td><td>桌面客户端形态、复用策略、开放 SDK 设计（终期）</td><td>全栈</td></tr>
+    <tr><td>11-账号会员与积分计费体系</td><td>会员分级、沙箱控制、积分兑换与扣费流程</td><td>后端+前端</td></tr>
+    <tr><td>12-桌面版SDK技术栈与实现方案</td><td>Tauri 插件矩阵/桥接/签名更新 + TS/Py SDK 工程化（Spec 10 的技术细化篇）</td><td>全栈</td></tr>
+    <tr><td>E0~E5（评测/ 目录）</td><td><a href="../评测/Agent评测体系建设规划.html">Agent 评测体系</a>：数据集、链路质量、检索安全、模型对比、CI 门禁</td><td>评测+全员</td></tr>
+  </table>
+</section>
+
+<!-- 11 -->
+<section id="s11">
+  <h2><span class="no">11</span>会员体系与积分计费（沙箱控制）</h2>
+  <p>大模型调用按 token 向厂商付费，平台通过「会员分级 + 积分扣款」回收成本并盈利：充值金额等比兑换积分，模型消耗按积分单价扣款，单价与厂商百万 token 定价等比例换算，中间预留 <b>5% 利润空间</b>；免费用户受沙箱控制只能使用免费模型。积分模式参考 Cursor / Manus / Genspark / 扣子等主流 Agent 产品惯例。详细规则与数据设计见 Spec <code>11-账号会员与积分计费体系.md</code>。</p>
+
+  <h3>11.1 积分换算规则</h3>
+  <pre><span class="c"># 核心公式（单价随厂商调价在管理后台维护，积分自动重算）</span>
+充值汇率：1 元 = 10 积分
+模型混合单价(元/百万token) = (输入价×3 + 输出价×1) ÷ 4   <span class="c"># 输入:输出 = 3:1 加权</span>
+模型积分单价 = ceil( 混合单价 × 10 × 1.05 )               <span class="c"># 1.05 = 5% 利润空间</span>
+生图积分单价 = ceil( 单张成本 × 10 × 1.05 )</pre>
+
+  <h3>11.2 模型积分价目（节选）</h3>
+  <table>
+    <tr><th>档位</th><th>模型</th><th>积分消耗</th><th>免费用户</th></tr>
+    <tr><td>Free</td><td>豆包 Lite（免费额度）</td><td>0</td><td>✅ 唯一可用（每日额度内）</td></tr>
+    <tr><td>S</td><td>豆包 Pro / 通义万相生图</td><td>9 积分/百万tok ｜ 2 积分/张</td><td>❌</td></tr>
+    <tr><td>A</td><td>DeepSeek / GLM-4 / Qwen-Image</td><td>29~37 积分/百万tok ｜ 3 积分/张</td><td>❌</td></tr>
+    <tr><td>B</td><td>Kimi K2 / Qwen-VL / FLUX</td><td>32~74 积分/百万tok ｜ 14 积分/张</td><td>❌</td></tr>
+    <tr><td>C</td><td>GPT-4o-mini / GPT Image 2</td><td>20 积分/百万tok ｜ 37 积分/张</td><td>❌（尊享专享）</td></tr>
+  </table>
+
+  <h3>11.3 会员等级与充值</h3>
+  <table>
+    <tr><th>等级</th><th>获取方式</th><th>可用模型</th><th>每月赠送积分</th><th>免费日额度</th></tr>
+    <tr><td>免费用户</td><td>注册即得</td><td>仅 Free 档（沙箱）</td><td>0</td><td>对话 20 次/日 · 生成 2 篇/日 · 识图 5 次/日 · 测试生图 2 张/日</td></tr>
+    <tr><td>尊享会员</td><td>月卡 ¥99 / 年卡 ¥799</td><td>全部模型（含 B/C 档海外模型与生图）</td><td>9000/月（当月有效）</td><td>同免费（兜底）</td></tr>
+    <tr><td>加油包</td><td>¥10=100 · ¥50=520(赠4%) · ¥100=1100(赠10%)</td><td>—</td><td>充值积分永久有效</td><td>—</td></tr>
+  </table>
+
+  <h3>11.4 沙箱控制与扣费流程</h3>
+  <div class="flow">
+    <div class="fstep">请求模型</div><span class="farr">→</span>
+    <div class="fstep">等级校验<br><span class="muted">免费用户触付费模型 → 自动降级免费模型并提示</span></div><span class="farr">→</span>
+    <div class="fstep">余额预检<br><span class="muted">不足拒请（不产生厂商成本）</span></div><span class="farr">→</span>
+    <div class="fstep">调用 LLM</div><span class="farr">→</span>
+    <div class="fstep">按实际 usage 结算积分<br><span class="muted">失败全额退还 · 流水幂等</span></div>
+  </div>
+  <ul>
+    <li><b>双余额 FIFO：</b>先扣赠送积分（按月过期）再扣充值积分（永久），流水全部可查可对账。</li>
+    <li><b>强制点在路由层：</b>沙箱校验内置于 LiteLLM 路由封装，业务接口不可绕过；免费模型名单硬编码兜底。</li>
+    <li><b>前端呈现：</b>模型选择器标注积分消耗与免费角标，余额角标 + 不足提醒，个人中心会员积分页（等级/余额/充值档位/流水）。</li>
+  </ul>
+</section>
+
+<section id="s12">
+  <h2><span class="no">12</span>桌面版 SDK 建设规划（终期）</h2>
+  <p>桌面版 SDK 为平台<b>最后阶段</b>建设内容：在 Web 端产品与 API 体系全部稳定后启动，最大化复用既有前端与接口资产，不重复造轮子。详细 Spec 见 <code>docs/spec/10-桌面版SDK建设.md</code>。</p>
+  <div class="grid g3">
+    <div class="card"><div class="icon">🖥️</div><h4>桌面客户端</h4><p>基于 Tauri（Rust 内核，包体小、内存占用低）复用 Vue3 前端打包桌面应用（Windows/macOS），对标 ChatGPT 桌面版体验。</p></div>
+    <div class="card"><div class="icon">📂</div><h4>本地深度能力</h4><p>本地文件夹拖拽导入素材、全局快捷键唤起对话、系统通知（生成完成/审核结果）、离线会话缓存、剪贴板快速截图问答。</p></div>
+    <div class="card"><div class="icon">📦</div><h4>开放 SDK</h4><p>输出 JS / Python SDK 包，封装登录、对话 SSE、文章生成、检索 API，供第三方教育工具集成 EduMeet 能力。</p></div>
+  </div>
+  <h3>12.1 技术栈清单（详细实现方案见 Spec 12）</h3>
+  <table>
+    <tr><th>层</th><th>选型</th><th>说明</th></tr>
+    <tr><td>应用壳</td><td>Tauri 2.x + Rust（stable ≥1.80）+ tao/WRY</td><td>系统 WebView（WKWebView/WebView2），包体小内存低；团队仅需应用级 Rust</td></tr>
+    <tr><td>前端复用</td><td>主工程同一份 Vue3+TS+Vite 构建产物 + platform 抽象层</td><td>@tauri-apps/api invoke/事件桥接；Web 端同名接口 no-op，回归零破坏</td></tr>
+    <tr><td>本地能力插件</td><td>fs/dialog、notification、global-shortcut、clipboard、sql(SQLite 离线缓存)、deep-link、single-instance、updater、log</td><td>截图用 screenshots-rs 自封装；凭据用 keyring 存系统钥匙串；capabilities JSON 最小授权</td></tr>
+    <tr><td>安全</td><td>CSP 白名单（仅 API+OSS 域）+ Hardened Runtime</td><td>Token 不落明文；崩溃日志脱敏可选上传</td></tr>
+    <tr><td>打包/更新</td><td>tauri-cli bundle（NSIS/DMG）+ EV 代码签名 + notarytool 公证 + tauri-plugin-updater（minisign 签名 latest.json）</td><td>GitHub Actions matrix CI，签名私钥仅存 CI secret</td></tr>
+    <tr><td>开放 SDK · TS</td><td>TypeScript 5 + tsup（ESM/CJS+d.ts）+ fetch/eventsource-parser（SSE）+ oauth4webapi（PKCE）+ zod + vitest/msw + changesets（npm provenance）</td><td>npm @edumeet/sdk；Node≥18 与浏览器双端</td></tr>
+    <tr><td>开放 SDK · Python</td><td>httpx + httpx-sse + pydantic v2 + uv/ruff/mypy + pytest/respx（PyPI trusted publishing）</td><td>PyPI edumeet-sdk；与主工程 schemas 对齐生成</td></tr>
+    <tr><td>契约对齐</td><td>CI 拉取主工程 OpenAPI 比对 SDK resources，漂移红灯</td><td>SDK 永不暴露 /admin 接口；monorepo sdk/ 目录</td></tr>
+  </table>
+
+  <div class="callout"><b>启动前提：</b>① Web 端 API 契约（Spec 03）冻结并稳定运行一个迭代周期；② 账号/鉴权体系支持桌面端 OAuth 授权流；③ 内容与模型链路成本模型清晰。三者满足后才进入桌面版排期。</div>
+</section>
+
+<section id="s13">
+  <h2><span class="no">13</span>平台运营、合规与体验支撑体系</h2>
+  <p>除核心 Agent 能力外，平台的规模化运营与合法上线还依赖六类支撑体系：账号登录方式补全、消息通知中心、合规资质与青少年模式、数据埋点与运营体系、容灾备份与灰度发布、新手引导与帮助中心。均已同步至对应 Spec 文档索引，实现排期归入第 9 章对应里程碑。</p>
+
+  <h3>13.1 登录方式补全（详见 Spec 02/08）</h3>
+  <ul>
+    <li><b>手机验证码登录：</b>教育场景家长/教师均以手机号为主账号，一期即支持；短信通道接入阿里云/腾讯云 SMS，频控与图形验证码防刷。</li>
+    <li><b>微信扫码 / 公众号登录：</b>覆盖家长侧最高频入口；UnionID 打通 Web 与后续桌面端、小程序端同一身份。</li>
+    <li><b>游客模式：</b>未登录可浏览公开内容与检索，触发生成/收藏/会员操作时引导注册，降低首访流失。</li>
+  </ul>
+
+  <h3>13.2 消息通知中心（详见 Spec 03 §通知接口）</h3>
+  <p>新增 notification-service（L2 应用服务层）：站内信 + WebSocket 实时推送 + 邮件可选，消息已读/未读、聚合去重，头像铃捕红点入口。</p>
+  <table>
+    <tr><th>通知类型</th><th>触发时机</th><th>通道</th></tr>
+    <tr><td>任务结果</td><td>文章生成完成/失败、素材导入完成</td><td>站内信 + WebSocket</td></tr>
+    <tr><td>审核结果</td><td>文章/素材审核通过、驳回及驳回理由</td><td>站内信 + WebSocket</td></tr>
+    <tr><td>互动通知</td><td>评论/回复/收藏/点赞</td><td>站内信（聚合）</td></tr>
+    <tr><td>会员与余额</td><td>积分不足预警、赠送积分到期提醒、充值到账</td><td>站内信 + WebSocket</td></tr>
+    <tr><td>系统公告</td><td>模型上下线、维护窗口、新功能发布</td><td>站内信 + 邮件</td></tr>
+  </table>
+
+  <h3>13.3 合规资质与青少年模式（详见 Spec 09 里程碑前置任务）</h3>
+  <ul>
+    <li><b>备案清单：</b>ICP 备案（上线前置）、算法备案、生成式 AI 服务备案（大模型上线登记），域名/服务器主体一致性提前规划。</li>
+    <li><b>AI 内容标识：</b>按《人工智能生成合成内容标识办法》在生成文章页与导出文件中标注「AI 生成」。</li>
+    <li><b>青少年模式：</b>未成年人身份申报后启用：内容过滤加强、使用时长提醒、默认关闭付费能力。</li>
+  </ul>
+
+  <h3>13.4 数据埋点与运营体系（详见 Spec 08 运营看板）</h3>
+  <ul>
+    <li><b>埋点模型：</b>统一事件模型（user_id / event / properties / timestamp），核心漏斗：注册→首次生成→首次收藏→付费转化。</li>
+    <li><b>运营位：</b>首页轮播 + 侧边运营卡片，支持配置化投放（活动/新模型/公告）。</li>
+    <li><b>内容冷启动：</b>官方预置分省市政策库与精选经验文章种子池，配合创作者激励（积分奖励）解决冷启动。</li>
+  </ul>
+
+  <h3>13.5 容灾备份与灰度发布（详见 Spec 01/09）</h3>
+  <ul>
+    <li><b>备份策略：</b>PostgreSQL 每日全量 + WAL 归档，RPO ≤ 1h；对象存储跨区冗余；每季度恢复演练。</li>
+    <li><b>发布策略：</b>按用户尾号灰度（1%→10%→50%→全量），Prompt 变更走 A/B 并关联评测体系（评测/ 目录 D8 线上监控域）。</li>
+  </ul>
+
+  <h3>13.6 新手引导与帮助中心</h3>
+  <ul>
+    <li><b>新手引导：</b>首访 3 步引导浮层（提问→生成文章→查资料）；示例 Prompt 一键填入。</li>
+    <li><b>帮助中心：</b>FAQ（入学政策适用范围、积分计费说明、内容免责声明）+ 意见反馈入口，反馈直达运营看板。</li>
+  </ul>
+
+  <div class="callout warn"><b>同步要求：</b>本章内容需在下一轮同步进 Spec 02（通知/埋点表结构）、Spec 03（通知接口）、Spec 08（引导/帮助/运营位页面）后进入排期。</div>
+</section>
+
+<section id="s14">
+  <h2><span class="no">14</span>风险与应对</h2>
+  <table>
+    <tr><th>风险</th><th>等级</th><th>应对策略</th></tr>
+    <tr><td>教育政策内容出错误导家长</td><td>高</td><td>政策回答强制引用官方来源 + 核查 Agent 事实核验 + 免责提示 + 用户纠错入口</td></tr>
+    <tr><td>AI 生成内容触及未成年人保护红线</td><td>高</td><td>生成流水线内置安全审查节点，发布前机审，违规内容拦截并记录</td></tr>
+    <tr><td>合规资质与备案进度影响上线</td><td>高</td><td>ICP/算法/生成式 AI 备案在 M1 并行启动（见第 13.3 节），未取得前采用灰度内测</td></tr>
+    <tr><td>开源内容版权纠纷</td><td>中</td><td>白名单采集 + 来源标注 + 版权申诉下架通道</td></tr>
+    <tr><td>多模型质量与成本波动</td><td>中</td><td>Langfuse 用量监控、按模型配额、关键场景固定高质量模型兜底</td></tr>
+    <tr><td>图文生成链路复杂度高（文档/编辑器/素材联动）</td><td>中</td><td>一期先做 Markdown 级图文，二期再升级块级文档模型，降低首批交付风险</td></tr>
+    <tr><td>检索冷启动效果差</td><td>低</td><td>上线前预置种子语料（分省市政策 + 精选经验文章），建立效果评测集</td></tr>
+  </table>
+
+  <div class="callout"><b>下一步：</b>本规划与 docs/spec/ 下 13 篇建设 Spec（00~12）及评测/ 目录 E0~E5 已就绪。请审阅确认（重点关注第 7.2 节模型推荐、第 9 章路线图、第 11 章会员积分计费、第 13 章平台支撑体系、Spec 02 数据模型与 09 任务拆分），确认无误后再启动代码实现。</div>
+</section>
+
+<footer>EduMeet 建设规划 v1.5 · 2026-09-01 · 本文档为规划稿，不含代码实现</footer>
+</div>
+</body>
+</html>
