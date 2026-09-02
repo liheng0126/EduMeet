@@ -81,7 +81,7 @@
       <span class="tag">版本 v2.1</span>
       <span class="tag">2026-09-01</span>
       <span class="tag">隶属 EduMeet 主规划（docs/ v1.5）</span>
-      <span class="tag">独立目录：评测/</span>
+      <span class="tag">独立目录：evaluation/</span>
     </div>
   </div>
 </header>
@@ -118,7 +118,7 @@
     <div class="card"><div class="icon">🧩</div><h4>多智能体链路复杂</h4><p>文章生成是 5 Agent 流水线（规划→写作→配图→核查→审核，Spec 04），任何 Prompt/节点变更都可能引起级联质量退化，需要逐环节记分卡定位退化点。</p></div>
     <div class="card"><div class="icon">💰</div><h4>计费是资金级零容错</h4><p>积分扣费链路（Spec 11：两阶段扣费、双余额 FIFO、沙箱控制）直接关联真金白银——多扣引发客诉退款与信任损失，少扣是直接资损，必须以「误差=0」的资金级标准评测。</p></div>
   </div>
-  <div class="callout"><b>定位：</b>评测体系是 EduMeet 的「质量基础设施」，与业务功能同步建设——冒烟评测集随 M1 流水线一起交付，评测平台随 M2 完整落地，计费资金级专项随 M3（会员计费上线同期）生效，模型对比评测每季度驱动一次选型复审。独立目录 <code>评测/</code> 管理，不影响主工程代码。</div>
+  <div class="callout"><b>定位：</b>评测体系是 EduMeet 的「质量基础设施」，与业务功能同步建设——冒烟评测集随 M1 流水线一起交付，评测平台随 M2 完整落地，计费资金级专项随 M3（会员计费上线同期）生效，模型对比评测每季度驱动一次选型复审。独立目录 <code>evaluation/</code> 管理，不影响主工程代码。</div>
 </section>
 
 <section id="e2">
@@ -142,7 +142,7 @@
   <table>
     <tr><th>业界体系</th><th>核心做法</th><th>EduMeet 借鉴点</th></tr>
     <tr><td><b>RAGAS</b>（RAG 评测事实标准）</td><td>faithfulness / answer relevancy / context precision / context recall 四件套，无金标自动评</td><td>D2/D3 指标口径直接采用 RAGAS；faithfulness 门禁 ≥0.90</td></tr>
-    <tr><td><b>DeepEval / promptfoo</b></td><td>「用例即代码」：Pytest 风格断言封装评测，天然内嵌 CI 回归</td><td>评测/evals 工程的 smoke 套件以 pytest 断言形式接入 PR 门禁（E5）</td></tr>
+    <tr><td><b>DeepEval / promptfoo</b></td><td>「用例即代码」：Pytest 风格断言封装评测，天然内嵌 CI 回归</td><td>evaluation/evals 工程的 smoke 套件以 pytest 断言形式接入 PR 门禁（E5）</td></tr>
     <tr><td><b>OpenAI Evals / HELM</b></td><td>统一任务格式 + 多模型同题对比，报告矩阵化</td><td>DS5 固定集横向对比矩阵（第 10 章），同题同 Judge 保证公平</td></tr>
     <tr><td><b>MT-Bench / Chatbot Arena</b></td><td>LLM-as-Judge 多维打分 + 人类偏好在环校准</td><td>Judge 上岗校准（与人评一致率 ≥85%）+ L4 人工抽检 20%</td></tr>
     <tr><td><b>AgentBench / τ-bench</b></td><td>工具调用轨迹断言、多轮任务端到端完成率</td><td>D5 Agent Harness 轨迹比对：调用对象/参数/顺序逐项断言</td></tr>
@@ -293,7 +293,7 @@
     </div>
     <div class="arrow">▼</div>
     <div class="layer">
-      <div class="lname">评测执行层（评测/evals 工程）</div>
+      <div class="lname">评测执行层（evaluation/evals 工程）</div>
       <div class="boxes">
         <div class="box">Runner（并发执行+超时重试）</div>
         <div class="box">Dataset Loader（版本化加载）</div>
@@ -313,8 +313,8 @@
       <div class="boxes"><div class="box gray">HTML 评测报告（分域得分+逐环节记分卡+失败样例）</div><div class="box gray">趋势看板（版本对比/历史曲线/归因矩阵）</div><div class="box gray">门禁判定（阈值→阻断/放行，零容忍级一票否决）</div><div class="box gray">飞书/邮件通知 + P0 资损告警</div></div>
     </div>
   </div>
-  <pre><span class="c"># 评测/evals 工程目录（与主仓库并列，独立演进）</span>
-评测/evals/
+  <pre><span class="c"># evaluation/evals 工程目录（与主仓库并列，独立演进）</span>
+evaluation/evals/
 ├── datasets/          # DS1~DS6 JSONL + 版本清单（DS6 与 Spec 11 版本号绑定）
 ├── metrics/           # l1_rules.py / l2_stats.py / l3_judge.py(rubric)
 │   └── billing_oracle.py   # Spec 11 公式金标推导 + property-based fuzz（Hypothesis）
@@ -358,7 +358,7 @@
 
 <section id="e12">
   <h2><span class="no">12</span>Spec 文档体系（E0~E6）</h2>
-  <p>评测体系详细 Spec 位于 <code>评测/spec/</code>，编号 E 系列与主项目 docs/spec/ 00~12 呼应，可独立派发开发。</p>
+  <p>评测体系详细 Spec 位于 <code>evaluation/spec/</code>，编号 E 系列与主项目 docs/spec/ 00~12 呼应，可独立派发开发。</p>
   <table>
     <tr><th>文档</th><th>内容</th><th>主要角色</th></tr>
     <tr><td>E0-评测体系总览与规范</td><td>评测域定义、指标总表、流程与角色职责</td><td>全员</td></tr>
@@ -366,7 +366,7 @@
     <tr><td>E2-智能体链路质量评测</td><td>5 Agent 逐环节记分卡、RAG 问答/Agent 行为评测实现</td><td>AI 后端 + 评测</td></tr>
     <tr><td>E3-检索质量与内容安全评测</td><td>检索指标计算、安全对抗评测与红队生成</td><td>后端 + 评测</td></tr>
     <tr><td>E4-模型对比评测与选型基线</td><td>三维矩阵、Judge 校准、选型复审流程</td><td>评测 + 架构</td></tr>
-    <tr><td>E5-评测平台工程与 CI 回归</td><td>评测/evals 工程、流水线、门禁集成</td><td>评测 + DevOps</td></tr>
+    <tr><td>E5-评测平台工程与 CI 回归</td><td>evaluation/evals 工程、流水线、门禁集成</td><td>评测 + DevOps</td></tr>
     <tr><td><b>E6-计费正确性评测专项（资金级）</b></td><td>Billing Oracle、DS6 资金级用例、对账三道闸、混沌用例、规则-用例版本绑定</td><td>后端 + 评测 + 测试开发</td></tr>
   </table>
 </section>
@@ -376,7 +376,7 @@
   <table>
     <tr><th>阶段</th><th>时间</th><th>交付</th></tr>
     <tr><td><span class="badge b0">P0</span>随 M1 起步</td><td>M1 期间（4 周）</td><td>DS2 冒烟集 + DS4 安全对抗集 + smoke 套件接入 CI（生成/问答链路上线即有回归兜底）</td></tr>
-    <tr><td><span class="badge b0">P0</span>随 M2 完整落地</td><td>M2 期间（4 周）</td><td>DS1/DS3/DS5 建成、评测/evals 工程上线、Nightly + 发布门禁全量生效、逐环节记分卡、首份模型对比报告</td></tr>
+    <tr><td><span class="badge b0">P0</span>随 M2 完整落地</td><td>M2 期间（4 周）</td><td>DS1/DS3/DS5 建成、evaluation/evals 工程上线、Nightly + 发布门禁全量生效、逐环节记分卡、首份模型对比报告</td></tr>
     <tr><td><span class="badge b3">P0</span>随 M3 生效（资金级）</td><td>M3 期间（与会员计费上线同期）</td><td>DS6 资金级 120 例 + Billing Oracle fuzz 常驻 CI + 对账三道闸 job + 资损监控告警；会员计费<b>上线前</b>必须全绿</td></tr>
     <tr><td><span class="badge b1">P1</span>随 M4 增强</td><td>M4 期间</td><td>线上反馈埋点与周报、趋势看板、DS4 对抗生成器季度扩容机制</td></tr>
     <tr><td><span class="badge b2">P2</span>持续运营</td><td>常态化</td><td>季度模型选型复审、季度标注漂移审计、评测集扩容（每季度 +20% 难例）、月度厂商账单反核常态化</td></tr>
@@ -394,7 +394,7 @@
     <tr><td>并发/混沌用例污染环境</td><td>中</td><td>影子账户 + 独立 DB 实例，用例结束自动清理对账</td></tr>
     <tr><td>评测基建拖慢业务迭代</td><td>低</td><td>P0 仅 CI 冒烟（&lt;10 分钟），全量放 Nightly 不阻塞 PR；DS6 仅在计费变更触发</td></tr>
   </table>
-  <div class="callout"><b>下一步：</b>本规划与 评测/spec/ 下 7 篇 Spec（E0~E6）就绪，与主项目 docs/spec/ 00~12 形成完整建设蓝图。请审阅确认后按 P0 节奏随 M1 启动评测基建，计费资金级专项随 M3 与会员计费同步交付。</div>
+  <div class="callout"><b>下一步：</b>本规划与 evaluation/spec/ 下 7 篇 Spec（E0~E6）就绪，与主项目 docs/spec/ 00~12 形成完整建设蓝图。请审阅确认后按 P0 节奏随 M1 启动评测基建，计费资金级专项随 M3 与会员计费同步交付。</div>
 </section>
 
 <section id="e15">

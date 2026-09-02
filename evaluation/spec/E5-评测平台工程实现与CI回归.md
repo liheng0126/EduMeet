@@ -1,6 +1,6 @@
 # E5 - 评测平台工程实现与 CI 回归
 
-> 版本：v1.0 ｜ 状态：待评审 ｜ 上游：E0~E4 ｜ 落地物：`评测/evals/` 工程
+> 版本：v1.0 ｜ 状态：待评审 ｜ 上游：E0~E4 ｜ 落地物：`evaluation/evals/` 工程
 
 ---
 
@@ -11,7 +11,7 @@
 ## 2. 工程结构
 
 ```
-评测/evals/
+evaluation/evals/
 ├── datasets/            # E1：DS1~DS6 JSONL + VERSIONS.md
 ├── metrics/
 │   ├── l1_rules.py      # 结构/引用/时效标注等规则断言
