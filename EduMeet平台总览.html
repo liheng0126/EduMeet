@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EduMeet · 平台总览：建设背景、难点与评测汇总</title>
+<style>
+  :root{
+    --build:#2563eb; --build-dark:#1e40af; --eval:#7c3aed; --eval-dark:#5b21b6;
+    --accent:#10b981; --bg:#f8fafc; --card:#ffffff; --text:#1e293b; --muted:#64748b;
+    --border:#e2e8f0; --warn:#f59e0b; --danger:#ef4444;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:"PingFang SC","Microsoft YaHei",-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.75;}
+  .container{max-width:1080px;margin:0 auto;padding:0 24px;}
+  header{background:linear-gradient(120deg,#1e3a8a 0%,#2563eb 45%,#7c3aed 100%);color:#fff;padding:60px 0 54px;}
+  header h1{font-size:32px;margin-bottom:10px;}
+  header .sub{font-size:16px;opacity:.92;margin-bottom:22px;}
+  header .meta{display:flex;gap:12px;flex-wrap:wrap;}
+  .tag{background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.3);padding:4px 14px;border-radius:999px;font-size:13px;}
+  nav.toc{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px 24px;margin:-30px auto 36px;position:relative;box-shadow:0 8px 24px rgba(30,58,138,.08);display:flex;gap:18px;align-items:center;flex-wrap:wrap;}
+  nav.toc b{color:var(--muted);font-size:14px;}
+  nav.toc a{color:var(--build);text-decoration:none;font-size:14px;}
+  nav.toc a:hover{text-decoration:underline;}
+  section{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:32px 36px;margin-bottom:28px;}
+  section h2{font-size:22px;padding-bottom:12px;border-bottom:2px solid var(--build);margin-bottom:20px;display:flex;align-items:center;gap:10px;}
+  section h2 .no{color:#fff;border-radius:8px;font-size:14px;padding:2px 10px;background:var(--build);}
+  section.eval h2{border-color:var(--eval);}
+  section.eval h2 .no{background:var(--eval);}
+  section h3{font-size:17px;margin:22px 0 10px;color:var(--build-dark);}
+  section.eval h3{color:var(--eval-dark);}
+  p{margin-bottom:10px;color:#334155;}
+  ul,ol{padding-left:24px;margin-bottom:12px;}
+  li{margin-bottom:6px;color:#334155;}
+  .muted{color:var(--muted);font-size:13px;}
+  table{width:100%;border-collapse:collapse;font-size:14px;margin:14px 0 18px;}
+  th{background:#eff6ff;color:var(--build-dark);text-align:left;}
+  section.eval th{background:#f5f3ff;color:var(--eval-dark);}
+  th,td{border:1px solid var(--border);padding:9px 12px;vertical-align:top;}
+  tr:nth-child(even) td{background:#f8fafc;}
+  .callout{border-left:4px solid var(--build);background:#eff6ff;border-radius:0 10px 10px 0;padding:14px 18px;margin:14px 0;font-size:14px;}
+  .callout.eval{border-color:var(--eval);background:#f5f3ff;}
+  .callout.danger{border-color:var(--danger);background:#fef2f2;}
+  .callout b{color:var(--text);}
+  .grid{display:grid;gap:16px;margin:14px 0;}
+  .grid.g3{grid-template-columns:repeat(3,1fr);}
+  .grid.g2{grid-template-columns:repeat(2,1fr);}
+  .card{border:1px solid var(--border);border-radius:12px;padding:16px 18px;background:#fbfdff;}
+  .card .icon{font-size:24px;}
+  .card h4{margin:6px 0;color:var(--text);}
+  .card p{font-size:13px;color:var(--muted);margin:0;}
+  .entry{display:block;text-decoration:none;border-radius:14px;padding:24px 28px;margin:14px 0;color:#fff;transition:transform .15s,box-shadow .15s;}
+  .entry:hover{transform:translateY(-2px);box-shadow:0 10px 26px rgba(0,0,0,.16);}
+  .entry.build{background:linear-gradient(120deg,#1e40af,#3b82f6);}
+  .entry.evalc{background:linear-gradient(120deg,#5b21b6,#8b5cf6);}
+  .entry h3{color:#fff;margin:0 0 6px;font-size:18px;}
+  .entry p{color:rgba(255,255,255,.9);margin:0;font-size:14px;}
+  .entry .go{float:right;font-size:13px;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.4);border-radius:999px;padding:3px 14px;}
+  footer{text-align:center;color:var(--muted);font-size:13px;padding:30px 0 50px;}
+  code{background:#f1f5f9;border-radius:4px;padding:1px 6px;font-size:13px;color:#0f172a;}
+  @media (max-width:760px){.grid.g3,.grid.g2{grid-template-columns:1fr;}}
+  @media print{section{page-break-inside:avoid;}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="container">
+    <h1>EduMeet · 平台总览</h1>
+    <div class="sub">中小学生教育智能体平台 —— 建设背景 · 建设难点 · 评测汇总（本页为项目入口导航页）</div>
+    <div class="meta">
+      <span class="tag">2026-09-01</span>
+      <span class="tag">主规划 v1.5 ｜ 评测规划 v2.1</span>
+      <span class="tag">规划阶段：文档评审中，未启动代码实现</span>
+    </div>
+  </div>
+</header>
+
+<div class="container">
+
+<nav class="toc">
+  <b>快速导航：</b>
+  <a href="#s1">① 平台入口</a> ·
+  <a href="#s2">② 建设背景</a> ·
+  <a href="#s3">③ 建设难点与解法</a> ·
+  <a href="#s4">④ 评测体系汇总</a> ·
+  <a href="#s5">⑤ 文档体系导航</a>
+</nav>
+
+<section id="s1">
+  <h2><span class="no">01</span>平台入口（两份详细规划）</h2>
+  <a class="entry build" href="docs/EduMeet建设规划.html">
+    <span class="go">打开全文 →</span>
+    <h3>📘 平台建设规划（v1.5 · 14 章）</h3>
+    <p>产品蓝图、ChatGPT 式页面布局、5-Agent 文章生成流水线、检索与图文展示、模型 P0/P1/P2 分批接入、会员积分计费（资金级）、13 篇开发 Spec（00~12）、M1~M5 里程碑、合规与运营支撑体系。</p>
+  </a>
+  <a class="entry evalc" href="evaluation/Agent评测体系建设规划.html">
+    <span class="go">打开全文 →</span>
+    <h3>🟣 Agent 评测体系建设规划（v2.1 · 15 章）</h3>
+    <p>八大评测域、业界对标（RAGAS/PyRIT/τ-bench 等）、5-Agent 逐环节量化记分卡、DS1~DS6 数据集、计费资金级零容错专项、上线门禁一票否决、7 篇评测 Spec（E0~E6）、评测报告 Demo。</p>
+  </a>
+</section>
+
+<section id="s2">
+  <h2><span class="no">02</span>平台建设背景</h2>
+  <h3>2.1 要解决的问题</h3>
+  <p>中小学教育信息在家长侧长期存在三类痛点，EduMeet 以「AI Agent + 内容平台」双形态针对性解决：</p>
+  <div class="grid g3">
+    <div class="card"><div class="icon">📉</div><h4>入学政策信息不对称</h4><p>升学政策分省市、分学段、逐年变化，散落在教育部门网站与自媒体，家长检索成本高且极易被过时信息误导。</p></div>
+    <div class="card"><div class="icon">🧩</div><h4>经验分散难获取</h4><p>学习经验、家庭教育思路、教师教学经验分散在社交平台，质量参差、缺少面向教育场景的结构化沉淀与分发。</p></div>
+    <div class="card"><div class="icon">⏱</div><h4>资料整理费时费力</h4><p>学习资料收集与整理高度依赖人工，缺少「导入素材 → AI 融合生成 → 沉淀复用」的一体化工具。</p></div>
+  </div>
+  <h3>2.2 平台定位与核心能力</h3>
+  <p>面向<b>家长 / 学生 / 教师</b>三类角色的网页版教育 Agent 平台，主题聚焦：全国中小学生入学政策、学习资料、家庭教育思路分享、学生学习经验分享、教师教育经验分享。核心能力包括：对标 ChatGPT 的三栏会话式布局；文章 AI 自动生成并自动绑定作者账号（图文模式，5-Agent 流水线）；文章检索与图文阅读器（混合检索 + 块级文档展示）；自定义素材导入（文章/图片/视频）并融合进文档；用户自选大模型（LiteLLM 统一路由）；内容来源 = 开源网络文章（白名单采集）+ 平台私有文章（原创沉淀）。</p>
+  <h3>2.3 建设路线</h3>
+  <p>按 M1~M5 五个里程碑推进：<b>M1</b> 基础框架与生成链路冒烟 → <b>M2</b> 检索/图文/评测平台完整落地 → <b>M3</b> 会员积分计费（资金级评测同期全绿）→ <b>M4</b> 运营增强与线上反馈 → <b>M5</b> 桌面版 SDK（Tauri + 开放 SDK，终期）。工作模式：先文档评审、后代码，每份 Spec 附验收标准。</p>
+</section>
+
+<section id="s3">
+  <h2><span class="no">03</span>平台建设难点与对应解法</h2>
+  <div class="grid g2">
+    <div class="card"><div class="icon">🎯</div><h4>难点 1：教育政策内容零容忍出错</h4><p>面向家长的升学决策建议一旦幻觉出错，后果严重且不可逆。<br><b>解法：</b>政策回答强制引用官方来源 + 核查 Agent 事实核验（召回 ≥95%）+ 时效标注 100% + 用户纠错入口；评测门禁实体级准确率 ≥98%，一票否决。</p></div>
+    <div class="card"><div class="icon">🔄</div><h4>难点 2：模型不固定、成本敏感</h4><p>大模型随行情热切换，图文质量与成本差异大。<br><b>解法：</b>LiteLLM 统一路由，P0/P1/P2 分批接入高性价比图文友好模型；DS5 固定集季度跑分「质量-成本-延迟」三维矩阵驱动选型；沙箱控制免费用户仅用免费模型。</p></div>
+    <div class="card"><div class="icon">🧩</div><h4>难点 3：多智能体链路复杂</h4><p>文章生成是 规划→写作→配图→核查→审核 5-Agent 流水线，任一 Prompt 变更都可能级联退化。<br><b>解法：</b>逐环节量化记分卡（17 项指标）+ Nightly 回归 + 劣化归因矩阵，定位到环节而非只知变差。</p></div>
+    <div class="card"><div class="icon">💰</div><h4>难点 4：计费是资金级零容错</h4><p>积分扣费（1 元 = 10 积分，5% 利润系数，双余额 FIFO）多扣伤信任、少扣是资损。<br><b>解法：</b>Billing Oracle 百万组合 fuzz + 幂等/并发/沙箱逃逸矩阵 + 对账三道闸，四项断言「误差 = 0」方可发布。</p></div>
+    <div class="card"><div class="icon">🛡</div><h4>难点 5：未成年人内容安全与合规</h4><p>面向未成年人的内容安全红线高于一般平台，且上线需备案资质。<br><b>解法：</b>审核 Agent 对抗拦截 100%（一票否决）+ 误杀率 ≤5% 平衡可用性；ICP/算法/生成式 AI 备案 M1 并行启动；AI 内容标识与青少年模式。</p></div>
+    <div class="card"><div class="icon">🌱</div><h4>难点 6：内容冷启动与版权</h4><p>平台初期无内容、无用户，检索质量无从谈起；开源采集有版权风险。<br><b>解法：</b>官方预置分省市政策库与精选经验种子池 + 创作者积分激励；白名单采集 + 来源标注 + 版权申诉通道。</p></div>
+  </div>
+</section>
+
+<section id="s4" class="eval">
+  <h2><span class="no">04</span>评测体系汇总</h2>
+  <div class="callout eval"><b>定位：</b>评测体系是 EduMeet 的质量基础设施，与业务同步建设——冒烟评测随 M1 交付、评测平台随 M2 落地、计费资金级专项随 M3 与会员计费同期全绿、模型对比每季度驱动选型复审。</div>
+  <h3>4.1 八大评测域</h3>
+  <table>
+    <tr><th>域</th><th>评测对象</th><th>核心量化门禁</th></tr>
+    <tr><td>D1 文章生成质量</td><td>5-Agent 流水线产物（逐环节）</td><td>政策实体准确率 ≥98%、要点覆盖 ≥80%、图文相关 ≥4.0</td></tr>
+    <tr><td>D2 RAG 问答质量</td><td>RAG 问答 Agent</td><td>忠实度（RAGAS）≥0.90、时效标注率 100%</td></tr>
+    <tr><td>D3 检索质量</td><td>混合检索服务</td><td>NDCG@10 ≥0.75、时效版本正确率 ≥95%</td></tr>
+    <tr><td>D4 内容安全</td><td>审核/核查 Agent + 全部 LLM 出口</td><td>对抗拦截率 100%（一票否决）、误杀率 ≤5%</td></tr>
+    <tr><td>D5 Agent 行为</td><td>Supervisor 状态机 / 工具调用</td><td>任务完成率 ≥90%、状态机异常 = 0</td></tr>
+    <tr><td>D6 模型对比</td><td>P0/P1/P2 全部候选模型</td><td>质量-成本-延迟矩阵，报告驱动选型</td></tr>
+    <tr><td>D7 计费正确性（资金级）</td><td>积分公式/扣费事务/沙箱/对账</td><td>误差、逃逸、幂等重复、对账差异 <b>全部 = 0</b></td></tr>
+    <tr><td>D8 线上效果反馈</td><td>生产流量埋点</td><td>趋势监控 + 资损告警即时响应</td></tr>
+  </table>
+  <h3>4.2 方法与数据集</h3>
+  <p><b>四层评测法：</b>L1 规则断言（含计费确定性断言）→ L2 统计指标（NDCG/RAGAS/property-based fuzz）→ L3 LLM-as-Judge（与人评一致率 ≥85% 方可上岗，确定性指标禁用 Judge）→ L4 人工评审（发布抽检 20%）。<b>六大数据集：</b>DS1 政策金标 200 题（含时效陷阱）、DS2 生成种子集、DS3 检索评测集、DS4 安全对抗集（PyRIT 季度扩容）、DS5 模型对比通用集、DS6 计费资金级用例 120 例（与 Spec 11 版本号绑定），全部 Git 版本化。</p>
+  <h3>4.3 零容忍级指标（9 项，任一不达标禁止发布）</h3>
+  <p>政策实体准确率 ≥98% ｜ 时效标注率 100% ｜ 对抗拦截率 100% ｜ 不适宜图像 = 0 ｜ 状态机异常 = 0 ｜ 计费金额误差 = 0 ｜ 沙箱逃逸 = 0 ｜ 幂等重复扣费 = 0 ｜ 对账差异 = 0。</p>
+  <h3>4.4 计费资金级专项（评测体系的最重保障）</h3>
+  <div class="callout danger"><b>四项「= 0」断言一票否决：</b>①Billing Oracle 以 Spec 11 公式为天然做 property-based 百万组合 fuzz；②同 ref_id 重放 N 次仅扣 1 次（幂等）；③同账户 100 并发恰好扣 N、无负余额（竞态）；④对账三道闸（请求内自检 / T+1 日切 / 月度厂商账单反核）差异 = 0。计费规则变更的 PR 必须同步更新 DS6，规则与用例版本绑定，防漂移。</div>
+  <h3>4.5 上线门禁节奏</h3>
+  <p><b>PR 合入</b>跑 Smoke 套件（≤10 分钟，涉计费代码加跑 DS6 组合矩阵）→ <b>Nightly</b> 全量回归 + 逐环节记分卡与劣化归因 → <b>版本发布</b>全量六数据集 + 9 项零容忍级断言全绿 + 人工抽检 20% → 报告产出机读 <code>verdict: PASS/BLOCKED</code>，BLOCKED 拦截发布并附回滚指引。</p>
+</section>
+
+<section id="s5">
+  <h2><span class="no">05</span>文档体系导航</h2>
+  <h3>5.1 主项目 Spec（docs/spec/）</h3>
+  <table>
+    <tr><th>编号</th><th>文档</th><th>主题</th></tr>
+    <tr><td>00</td><td><a href="docs/spec/00-总览与开发约定.md">总览与开发约定</a></td><td>文档索引、技术栈总表、仓库结构、协作约定</td></tr>
+    <tr><td>01</td><td><a href="docs/spec/01-系统架构与模块划分.md">系统架构与模块划分</a></td><td>四层架构、模块依赖规则、容灾与发布</td></tr>
+    <tr><td>02</td><td><a href="docs/spec/02-数据模型设计.md">数据模型设计</a></td><td>users/articles/generation_tasks/library 等全量表结构</td></tr>
+    <tr><td>03</td><td><a href="docs/spec/03-API接口设计.md">API 接口设计</a></td><td>REST + SSE 契约、会员计费接口、错误码 40302~40304</td></tr>
+    <tr><td>04</td><td><a href="docs/spec/04-文章生成与智能体编排.md">文章生成与智能体编排</a></td><td>LangGraph 状态机、5-Agent 规格、作者自动绑定</td></tr>
+    <tr><td>05</td><td><a href="docs/spec/05-素材中心与文档集成.md">素材中心与文档集成</a></td><td>文章/图片/视频导入、预签名直传、素材融合</td></tr>
+    <tr><td>06</td><td><a href="docs/spec/06-检索与图文展示.md">检索与图文展示</a></td><td>混合检索、图文阅读器、块级文档模型</td></tr>
+    <tr><td>07</td><td><a href="docs/spec/07-大模型接入与路由.md">大模型接入与路由</a></td><td>P0/P1/P2 模型清单与优缺点、LiteLLM 接入 Demo、沙箱</td></tr>
+    <tr><td>08</td><td><a href="docs/spec/08-前端页面与交互设计.md">前端页面与交互设计</a></td><td>ChatGPT 式三栏布局、页面清单、运营看板</td></tr>
+    <tr><td>09</td><td><a href="docs/spec/09-里程碑与任务拆分.md">里程碑与任务拆分</a></td><td>M1~M5 里程碑、WBS 任务分解、备案前置项</td></tr>
+    <tr><td>10</td><td><a href="docs/spec/10-桌面版SDK建设.md">桌面版 SDK 建设</a></td><td>终期策略、启动 Gate、与 Web 端复用关系</td></tr>
+    <tr><td>11</td><td><a href="docs/spec/11-账号会员与积分计费体系.md">账号会员与积分计费体系</a></td><td>积分公式、单一尊享档、两阶段扣费、六表设计</td></tr>
+    <tr><td>12</td><td><a href="docs/spec/12-桌面版SDK技术栈与实现方案.md">桌面版 SDK 技术栈与实现方案</a></td><td>Tauri 2.x 插件矩阵、签名公证 CI、TS/Py 开放 SDK</td></tr>
+  </table>
+  <h3>5.2 评测 Spec（evaluation/spec/）</h3>
+  <table>
+    <tr><th>编号</th><th>文档</th><th>主题</th></tr>
+    <tr><td>E0</td><td><a href="evaluation/spec/E0-评测体系总览与规范.md">评测体系总览与规范</a></td><td>评测域定义、四层评测法、运行节奏、角色职责</td></tr>
+    <tr><td>E1</td><td><a href="evaluation/spec/E1-评测数据集与金标用例库.md">评测数据集与金标用例库</a></td><td>DS1~DS6 构建、标注规范、版本管理、对抗生成器</td></tr>
+    <tr><td>E2</td><td><a href="evaluation/spec/E2-智能体链路质量评测.md">智能体链路质量评测</a></td><td>5-Agent 逐环节记分卡、RAG 与 Agent 行为评测</td></tr>
+    <tr><td>E3</td><td><a href="evaluation/spec/E3-检索质量与内容安全评测.md">检索质量与内容安全评测</a></td><td>检索指标计算、安全对抗评测与红队生成</td></tr>
+    <tr><td>E4</td><td><a href="evaluation/spec/E4-模型对比评测与选型基线.md">模型对比评测与选型基线</a></td><td>三维矩阵、Judge 校准、季度选型复审</td></tr>
+    <tr><td>E5</td><td><a href="evaluation/spec/E5-评测平台工程实现与CI回归.md">评测平台工程实现与 CI 回归</a></td><td>evaluation/evals 工程、流水线、门禁集成、报告渲染</td></tr>
+    <tr><td>E6</td><td><a href="evaluation/spec/E6-计费正确性评测专项.md">计费正确性评测专项（资金级）</a></td><td>Billing Oracle、DS6 用例、对账三道闸、混沌用例</td></tr>
+  </table>
+  <div class="callout"><b>使用方式：</b>本页是项目总入口——新成员先读本页了解背景与难点，再通过第 1 章入口进入两份详细规划全文；开发与评测人员按第 5 章导航直达对应 Spec。</div>
+</section>
+
+<footer>EduMeet 平台总览 · 2026-09-01 ｜ 数据口径对齐：docs/EduMeet建设规划.html v1.5 · evaluation/Agent评测体系建设规划.html v2.1</footer>
+</div>
+</body>
+</html>
