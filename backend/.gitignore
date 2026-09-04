@@ -1,0 +1,7 @@
+# 运行产物与密钥不入库（Spec 00 §5.3）
+*.db
+.env
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/

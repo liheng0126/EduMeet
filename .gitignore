@@ -9,3 +9,16 @@
 
 # 系统临时文件
 Thumbs.db
+
+# Node
+node_modules/
+frontend/dist/
+
+# 本地临时脚本
+.uninstall_feilian.sh
+
+# tsc 误编译产物（源码以 .ts/.vue 为准）
+frontend/src/**/*.js
+frontend/src/**/*.js.map
+frontend/vite.config.js
+frontend/vite.config.js.map
