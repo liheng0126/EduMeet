@@ -13,15 +13,15 @@ from __future__ import annotations
 
 import contextlib
 import os
-from typing import Any
+from typing import Any, Optional
 
 from app.core.config import get_settings
 
-_client: Any | None = None
+_client: Optional[Any] = None
 _init_done = False
 
 
-def get_langfuse() -> Any | None:
+def get_langfuse() -> Optional[Any]:
     """返回 Langfuse 客户端；未配置 Keys 时返回 None（调用方按 no-op 处理）。"""
     global _client, _init_done
     if _init_done:
@@ -33,11 +33,16 @@ def get_langfuse() -> Any | None:
     # 最佳实践：先注入环境变量，再 import SDK，避免 SDK 以空凭据初始化
     os.environ["LANGFUSE_PUBLIC_KEY"] = s.langfuse_public_key
     os.environ["LANGFUSE_SECRET_KEY"] = s.langfuse_secret_key
-    os.environ["LANGFUSE_HOST"] = s.langfuse_host
+    os.environ["LANGFUSE_HOST"] = s.langfuse_base_url or s.langfuse_host
     try:
         from langfuse import Langfuse
 
-        _client = Langfuse(environment="dev")
+        _client = Langfuse(
+            public_key=s.langfuse_public_key,
+            secret_key=s.langfuse_secret_key,
+            host=s.langfuse_base_url or s.langfuse_host,
+            environment="dev",
+        )
     except Exception as exc:  # noqa: BLE001
         print(f"[langfuse] 初始化失败，埋点降级为 no-op：{exc}")
         _client = None
@@ -56,10 +61,10 @@ def trace(
     name: str,
     *,
     as_type: str = "span",
-    user_id: str | None = None,
-    session_id: str | None = None,
-    tags: list[str] | None = None,
-    trace_name: str | None = None,
+    user_id: Optional[str] = None,
+    session_id: Optional[str] = None,
+    tags: Optional[list[str]] = None,
+    trace_name: Optional[str] = None,
     **kwargs: Any,
 ):
     """创建一个观测节点（span/generation/retriever/agent...），yield 观测对象（未启用时为 None）。
@@ -71,13 +76,11 @@ def trace(
     if lf is None:
         yield None
         return
-    from langfuse import propagate_attributes
-
     with lf.start_as_current_observation(as_type=as_type, name=name, **kwargs) as obs:
         if user_id is not None or session_id is not None or trace_name is not None or tags:
-            with propagate_attributes(
-                user_id=user_id, session_id=session_id, tags=tags, trace_name=trace_name
-            ):
-                yield obs
+            lf.update_current_trace(
+                user_id=user_id, session_id=session_id, tags=tags, name=trace_name
+            )
+            yield obs
         else:
             yield obs

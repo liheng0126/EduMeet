@@ -3,8 +3,11 @@
 - stream_chat：SSE 流式（chat/completions stream=true），逐 delta 转发
 - generate_article：非流式一次性生成文章 Markdown
 """
+from __future__ import annotations
+
 import json
 from collections.abc import AsyncGenerator
+from typing import Optional
 
 import httpx
 
@@ -38,7 +41,7 @@ _ARTICLE_PROMPT = (
 
 
 class DeepSeekProvider(LLMProvider):
-    def __init__(self, api_key: str | None = None):
+    def __init__(self, api_key: Optional[str] = None):
         s = get_settings()
         self.api_key = api_key or s.deepseek_api_key
         self.base_url = s.deepseek_base_url.rstrip("/")

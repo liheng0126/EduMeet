@@ -1,7 +1,10 @@
 """认证与密码（骨架用 PBKDF2 + 盐，M1 正式版可替换 passlib/bcrypt）"""
+from __future__ import annotations
+
 import hashlib
 import secrets
 from datetime import datetime, timedelta, timezone
+from typing import Optional
 
 import jwt
 
@@ -32,7 +35,7 @@ def create_access_token(user_id: int) -> str:
     return jwt.encode(payload, s.jwt_secret, algorithm=s.jwt_algorithm)
 
 
-def decode_access_token(token: str) -> int | None:
+def decode_access_token(token: str) -> Optional[int]:
     s = get_settings()
     try:
         payload = jwt.decode(token, s.jwt_secret, algorithms=[s.jwt_algorithm])

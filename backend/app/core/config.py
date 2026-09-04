@@ -23,6 +23,7 @@ class Settings(BaseSettings):
     langfuse_public_key: str = ""
     langfuse_secret_key: str = ""
     langfuse_host: str = "http://localhost:3000"
+    langfuse_base_url: str = ""
 
 
 @lru_cache

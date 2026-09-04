@@ -2,7 +2,10 @@
 
 provider 字段决定真实/模拟路由：deepseek-chat 走 DeepSeek 真实 API，其余暂为 mock。
 """
+from __future__ import annotations
+
 from dataclasses import dataclass
+from typing import Optional
 
 
 @dataclass(frozen=True)
@@ -23,5 +26,5 @@ MODEL_REGISTRY: list[ModelInfo] = [
 ]
 
 
-def get_model(model_id: str) -> ModelInfo | None:
+def get_model(model_id: str) -> Optional[ModelInfo]:
     return next((m for m in MODEL_REGISTRY if m.id == model_id), None)

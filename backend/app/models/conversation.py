@@ -1,5 +1,8 @@
 """会话与消息（Spec 02 §2.2 骨架子集）"""
+from __future__ import annotations
+
 from datetime import datetime
+from typing import Optional
 
 from sqlalchemy import JSON, DateTime, ForeignKey, String, Text, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
@@ -25,8 +28,8 @@ class Message(Base):
     session_id: Mapped[int] = mapped_column(ForeignKey("sessions.id"), index=True)
     role: Mapped[str] = mapped_column(String(16))  # user | assistant
     content: Mapped[str] = mapped_column(Text)
-    citations: Mapped[list | None] = mapped_column(JSON, nullable=True)  # [{title,url}]
-    model_id: Mapped[str | None] = mapped_column(String(64), nullable=True)
+    citations: Mapped[Optional[list]] = mapped_column(JSON, nullable=True)  # [{title,url}]
+    model_id: Mapped[Optional[str]] = mapped_column(String(64), nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime, server_default=func.now())
 
     conversation: Mapped["Conversation"] = relationship(back_populates="messages")

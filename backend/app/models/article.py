@@ -2,7 +2,10 @@
 
 全局红线 4：author_id NOT NULL —— 不允许存在无主内容。
 """
+from __future__ import annotations
+
 from datetime import datetime
+from typing import Optional
 
 from sqlalchemy import DateTime, ForeignKey, Index, String, Text, func
 from sqlalchemy.orm import Mapped, mapped_column
@@ -19,9 +22,9 @@ class Article(Base):
     status: Mapped[str] = mapped_column(String(16), default="draft")  # draft | published
     source: Mapped[str] = mapped_column(String(16), default="ai_generated")  # ai_generated | manual
     content_md: Mapped[str] = mapped_column(Text, default="")
-    model_id: Mapped[str | None] = mapped_column(String(64), nullable=True)
+    model_id: Mapped[Optional[str]] = mapped_column(String(64), nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime, server_default=func.now())
-    published_at: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
+    published_at: Mapped[Optional[datetime]] = mapped_column(DateTime, nullable=True)
 
 
 class GenerationTask(Base):
@@ -31,8 +34,8 @@ class GenerationTask(Base):
     user_id: Mapped[int] = mapped_column(ForeignKey("users.id"), index=True)
     topic: Mapped[str] = mapped_column(String(200))
     status: Mapped[str] = mapped_column(String(16), default="succeeded")  # 骨架同步完成；正式版 pending/running/failed
-    article_id: Mapped[int | None] = mapped_column(ForeignKey("articles.id"), nullable=True)
-    model_id: Mapped[str | None] = mapped_column(String(64), nullable=True)
+    article_id: Mapped[Optional[int]] = mapped_column(ForeignKey("articles.id"), nullable=True)
+    model_id: Mapped[Optional[str]] = mapped_column(String(64), nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime, server_default=func.now())
 
 

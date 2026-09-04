@@ -1,3 +1,7 @@
+from __future__ import annotations
+
+from typing import Optional
+
 from pydantic import BaseModel, Field
 
 
@@ -18,8 +22,8 @@ class MessageOut(BaseModel):
     id: int
     role: str
     content: str
-    citations: list | None = None
-    model_id: str | None = None
+    citations: Optional[list] = None
+    model_id: Optional[str] = None
 
     class Config:
         from_attributes = True

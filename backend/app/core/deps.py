@@ -1,4 +1,8 @@
 """依赖注入：当前登录用户（全局红线 4：生成/创作内容必须可解析到 author_id）"""
+from __future__ import annotations
+
+from typing import Optional
+
 from fastapi import Depends
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -12,7 +16,7 @@ bearer = HTTPBearer(auto_error=False)
 
 
 async def get_current_user(
-    cred: HTTPAuthorizationCredentials | None = Depends(bearer),
+    cred: Optional[HTTPAuthorizationCredentials] = Depends(bearer),
     db: AsyncSession = Depends(get_db),
 ) -> User:
     if cred is None:
