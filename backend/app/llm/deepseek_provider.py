@@ -1,7 +1,7 @@
 """DeepSeek 真实接入（OpenAI 兼容协议，Spec 07）
 
 - stream_chat：SSE 流式（chat/completions stream=true），逐 delta 转发
-- generate_article：非流式一次性生成文章 Markdown
+- stream_generate_article：SSE 流式生成文章 Markdown
 """
 from __future__ import annotations
 
@@ -49,10 +49,10 @@ class DeepSeekProvider(LLMProvider):
     def _headers(self) -> dict:
         return {"Authorization": f"Bearer {self.api_key}", "Content-Type": "application/json"}
 
-    async def stream_chat(self, model_id: str, messages: list[dict]) -> AsyncGenerator[dict, None]:
+    async def _stream_completion(self, messages: list[dict]) -> AsyncGenerator[dict, None]:
         payload = {
             "model": "deepseek-chat",
-            "messages": [{"role": "system", "content": SYSTEM_PROMPT}, *messages],
+            "messages": messages,
             "stream": True,
             "stream_options": {"include_usage": True},  # 供 Langfuse usage/成本统计
         }
@@ -81,24 +81,28 @@ class DeepSeekProvider(LLMProvider):
                         yield {"type": "delta", "content": delta}
         if usage:
             yield {"type": "usage", **usage}
+
+    async def stream_chat(self, model_id: str, messages: list[dict]) -> AsyncGenerator[dict, None]:
+        async for chunk in self._stream_completion(
+            [{"role": "system", "content": SYSTEM_PROMPT}, *messages]
+        ):
+            yield chunk
         # DeepSeek 无检索引用；citation 能力随 M2 混合检索接入（Spec 06）
         yield {"type": "citations", "citations": []}
 
-    async def generate_article(self, model_id: str, topic: str) -> tuple[str, list[Citation]]:
-        payload = {
-            "model": "deepseek-chat",
-            "messages": [
+    async def stream_generate_article(self, model_id: str, topic: str) -> AsyncGenerator[dict, None]:
+        async for chunk in self._stream_completion(
+            [
                 {"role": "system", "content": SYSTEM_PROMPT},
                 {"role": "user", "content": _ARTICLE_PROMPT.format(topic=topic)},
-            ],
-        }
-        async with httpx.AsyncClient(timeout=90) as client:
-            try:
-                resp = await client.post(
-                    f"{self.base_url}/chat/completions", json=payload, headers=self._headers()
-                )
-                resp.raise_for_status()
-            except httpx.HTTPStatusError as e:
-                raise _friendly(e, resp.text)
-            content = resp.json()["choices"][0]["message"]["content"]
-        return content, []
+            ]
+        ):
+            yield chunk
+        yield {"type": "citations", "citations": []}
+
+    async def generate_article(self, model_id: str, topic: str) -> tuple[str, list[Citation]]:
+        content: list[str] = []
+        async for chunk in self.stream_generate_article(model_id, topic):
+            if chunk["type"] == "delta":
+                content.append(chunk["content"])
+        return "".join(content), []

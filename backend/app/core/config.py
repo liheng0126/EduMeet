@@ -8,7 +8,7 @@ class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8", extra="ignore")
 
     app_name: str = "EduMeet API"
-    # 生产为 PostgreSQL 16；开发骨架降级 SQLite（aiosqlite），代码层无差异
+    # 仅连接 EduMeet 业务库。Langfuse 通过独立 SDK/HOST 上报，不使用此连接。
     database_url: str = "sqlite+aiosqlite:///./edumeet.db"
     jwt_secret: str = "dev-secret-change-me"
     jwt_algorithm: str = "HS256"

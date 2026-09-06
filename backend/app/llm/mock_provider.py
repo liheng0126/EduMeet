@@ -46,5 +46,15 @@ class MockProvider(LLMProvider):
         yield {"type": "citations", "citations": [c.__dict__ for c in _FAQ_CITATIONS]}
 
     async def generate_article(self, model_id: str, topic: str) -> tuple[str, list[Citation]]:
-        await asyncio.sleep(0.5)  # 模拟生成耗时
-        return _ARTICLE_TEMPLATE.format(topic=topic), _FAQ_CITATIONS
+        content: list[str] = []
+        async for chunk in self.stream_generate_article(model_id, topic):
+            if chunk["type"] == "delta":
+                content.append(chunk["content"])
+        return "".join(content), _FAQ_CITATIONS
+
+    async def stream_generate_article(self, model_id: str, topic: str) -> AsyncGenerator[dict, None]:
+        article = _ARTICLE_TEMPLATE.format(topic=topic)
+        for i in range(0, len(article), 18):
+            await asyncio.sleep(0.03)
+            yield {"type": "delta", "content": article[i : i + 18]}
+        yield {"type": "citations", "citations": [c.__dict__ for c in _FAQ_CITATIONS]}

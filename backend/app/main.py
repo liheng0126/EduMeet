@@ -8,15 +8,18 @@ from fastapi.responses import JSONResponse
 from app.core.config import get_settings
 from app.core.observability import flush as lf_flush
 from app.core.response import RESPONSE_OK
-from app.db.session import init_db
+from app.db.session import close_db, init_db
 from app.api.v1 import articles, auth, models, sessions
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     await init_db()
-    yield
-    lf_flush()  # 退出前刷出 Langfuse 缓冲的 trace
+    try:
+        yield
+    finally:
+        lf_flush()  # Langfuse 仍按原方式独立刷出观测数据
+        await close_db()
 
 
 app = FastAPI(title=get_settings().app_name, version="0.1.0-skeleton", lifespan=lifespan)

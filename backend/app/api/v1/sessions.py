@@ -14,8 +14,8 @@ from app.core.observability import trace
 from app.core.response import ERR_NOT_FOUND, EduMeetError, ok
 from app.db.session import get_db
 from app.llm.factory import get_provider_for
-from app.llm.registry import get_model
 from app.models.conversation import Conversation, Message
+from app.models.llm_model import LLMModel
 from app.models.user import User
 from app.schemas.chat import ChatStreamIn, ConversationOut, MessageOut
 
@@ -63,9 +63,10 @@ async def chat_stream(
     db: AsyncSession = Depends(get_db),
 ) -> StreamingResponse:
     conv = await _owned_session(db, user, session_id)
-    if get_model(body.model_id) is None:
+    model = await db.get(LLMModel, body.model_id)
+    if model is None or not model.enabled:
         raise EduMeetError(ERR_NOT_FOUND, "模型不存在")
-    provider = get_provider_for(body.model_id)
+    provider = get_provider_for(model.provider)
 
     user_msg = Message(session_id=conv.id, role="user", content=body.content)
     db.add(user_msg)
@@ -92,7 +93,8 @@ async def chat_stream(
                         retr.update(output={"history_messages": len(history)})
                 llm_messages = [{"role": m.role, "content": m.content} for m in reversed(history)]
                 with trace("llm-chat", as_type="generation", model=body.model_id,
-                           input=llm_messages, metadata={"provider": type(provider).__name__}) as gen:
+                           input=llm_messages,
+                           metadata={"provider": model.provider, "provider_class": type(provider).__name__}) as gen:
                     async for chunk in provider.stream_chat(body.model_id, llm_messages):
                         if chunk["type"] == "delta":
                             full.append(chunk["content"])
